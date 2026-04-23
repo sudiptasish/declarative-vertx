@@ -1,0 +1,308 @@
+<?xml version="1.0"?>
+<!--DOCTYPE vertx-web SYSTEM "dtd/vertx-web.dtd"-->
+
+<!-- 
+################################################################################
+#                                                                              #
+#                 Template for Vert.x web configuration                        #
+#                                                                              #
+################################################################################     
+-->
+
+<!--
+    This file is a configuration file that provides configuration and deployment information for Vert.x.
+    It's the standard name used by decl-vertx-container module as a deployment descriptor in Vert.x applications.
+    Apart from standard vert.x configuration, this file also defines the Verticles that will be deployed
+    and mappings between URL paths and the servlets that handle requests with those paths.
+
+    If any of the verticles is an Http verticle, then the Vert.x container uses this configuration to identify
+    the verticle to handle a given request and call the class method that corresponds to the request method.
+    
+    It has 3 sections:
+    1. Context Listener        (optional) .
+    2. Vert.x tuning parameter (optional) .
+    3. Declare the Verticle(s) (mandatory).
+
+    You will mostly be modifying the section 3. Do not update other sections unless you are confident about it.
+-->
+
+<vertx-web>
+    
+    <!--
+        Section 1: Context Listener.
+    -->
+    <context-listener/>
+    
+    <!--
+        Section 2: Tuning parameters for the Vert.x instance.
+    -->
+    <context-params>
+        <!--
+            The default event loop pool size is twice the number of cores on the machine.
+            You can override the value by specifying a number here. E.g., 2, 4, etc.
+        -->
+        <event-loop-pool-size/>
+        
+        <!--
+            An alternative way to run blocking code is to use a worker verticle. A worker
+            verticle is always executed with a thread from the worker pool. By default 
+            blocking code is executed on the Vert.x worker pool, configured with worker-pool-size.
+        -->
+        <worker-pool-size/>
+        
+        <!--
+            The default value of blocked thread check interval = 1000 ms.
+            You can override the value by specifying the below paraeter.
+        -->
+        <blocked-thread-check-interval/>
+        
+        <!--
+            Sets the value of max event loop execute time in milliseconds.
+        -->
+        <max-event-loop-execute-time/>
+        
+        <!--
+            Sets the value of max worker execute time in milliseconds.
+        -->
+        <max-worker-execute-time/>
+        
+        <!--
+            The default number of threads in the internal blocking pool
+            (used by some internal operations).
+        -->
+        <internal-blocking-pool-size/>
+        
+        <!--
+            The cluster manager.
+        -->
+        <cluster-manager/>
+        
+        <!--
+            Set whether HA will be enabled on the Vert.x instance.
+        -->
+        <ha-enabled/>
+        
+        <!--
+            Set the quorum size to be used when HA is enabled.
+        -->
+        <quorum-size/>
+        
+        <!--
+            Set the HA group to be used when ha-enabled is enabled.
+        -->
+        <ha-group/>
+        
+        <!--
+            Specify the vertx file system options
+        -->
+        <file-system-options>
+            <class-path-resolving-enabled/>
+            <file-caching-enabled/>
+            <file-cache-dir/>
+        </file-system-options>
+        
+        <!--
+            Define the supported metrics configuration for the Vert.x instance.
+        -->
+        <metrics-options>
+            <enabled/>
+            <factory/>
+        </metrics-options>
+        
+        <!--
+            Set the threshold value above this, the blocked warning contains a stack trace. in milliseconds.
+            The default value of warningExceptionTimeUnit is TimeUnit.NANOSECONDS
+        -->
+        <warning-exception-time/>
+        
+        <!--
+            Whether native transport is preferred
+        -->
+        <prefer-native-transport/>
+        
+        <!--
+            disable thread context classloader update by Vertx
+        -->
+        <disable-tccl/>
+        
+        <!--
+            Mark the vertx thread as daemon thread or user thread.
+            For keeping the old behavior, the default value is false instead of null.
+        -->
+        <use-daemon-thread/>
+        
+        <!--
+            Sets the event bus configuration to configure the host, port, ssl
+        -->
+        <event-bus-options>
+            <!--
+                The default cluster public host = null which means use the same as the cluster host.
+            -->
+            <cluster-public-host/>
+            
+            <!--
+                The default cluster public port = -1 which means use the same as the cluster port.
+            -->
+            <cluster-public-port/>
+            
+            <!--
+                The elapsed time between two successive pings between the clusters
+            -->
+            <cluster-ping-interval/>
+            
+            <!--
+                The amount of time a cluster will wait in order to receive a response of a ping
+            -->
+            <cluster-ping-reply-interval/>
+            
+            <!--
+                Set the accept back log
+            -->
+            <accept-backlog/>
+            
+            <!--
+                Specify the time elapsed after which the cluster should try to reconnect
+            -->
+            <reconnect-interval/>
+            
+            <!--
+                Number of times the clusters should make an attempt to reconnect
+            -->
+            <reconnect-attempts/>
+            
+            <!--
+                Connection time (in millis) for a reconnect
+            -->
+            <connect-timeout/>
+            
+            <!--
+                Whether this cluster will trust other cluster within same quorum
+            -->
+            <trust-all/>
+            
+            <!-- Set to true to enabled network activity logging: Netty's pipeline is configured for logging on Netty's logger -->
+            <log-activity/>
+            
+        </event-bus-options>
+        
+        <!--
+            Address resolver configuration to configure resolving DNS servers, cache TTL, etc.
+        -->
+        <address-resolver-options>
+            <hosts-path/>
+            
+            <hosts-refresh-period/>
+            
+            <servers/>
+            
+            <opt-resource-enabled/>
+            
+            <cache-min-time-to-live/>
+            
+            <cache-max-time-to-live/>
+           
+            <cache-negative-time-to-live/>
+            
+            <query-timeout/>
+            
+            <max-queries/>
+            
+            <rd-flag/>
+            
+            <!-- Comma separated domain names-->
+            <search-domains/>
+            
+            <ndots/>
+            
+            <rotate-servers/>
+            
+            <round-robin-inet-address/>
+            
+        </address-resolver-options>
+        
+        <!--
+            Vert.x error handler.
+        -->
+        <error-handler/>
+        
+        <!--
+            The custom metric class. Must be a sub-class of io.vertx.core.metrics.MetricsOptions.
+        -->
+        <metric-class/>
+        
+    </context-params>
+    
+    <!--
+        Section 3: Add the set of verticles.
+    -->
+    <verticles>
+        <verticle>
+            <!--
+                Name of the verticle (mandatory).
+            -->
+            <name>{verticle-name}</name>
+            
+            <!--
+                The class the represents this verticle (mandatory). Must be a subclass of io.vertx.core.Verticle.
+            -->
+            <class>{verticle-class}</class>
+            
+            <deploy-options>
+
+                <!--
+                    Indicates whether this verticle is a worker verticle
+                -->
+                <worker/>
+
+                <!--
+                    The default threading model to be used. Vertx supports 3 different threading model.
+                    1. EVENT_LOOP - Event loop threadming model (more apt if you intend to start an http server)
+                    2. WORKER - Worker threading model. Set this, if this is a worker verticle.
+                    3. VIRTUAL_THREAD - New jdk green threading model.
+                -->
+                <threading-model/>
+
+                <isolation-group/>
+
+                <!--
+                    Indicates whether this verticle will be deployed in high availability mode.
+                -->
+                <ha/>
+
+                <!--
+                    Extra classpath info for starting this verticle.
+                -->
+                <extra-classpath/>
+
+                <!--
+                    Number of instances to be spawned for this verticle.
+                -->
+                <instances/>
+
+                <!--
+                    Name of the worker pool. Applicable only if this verticle is a worker verticle
+                -->
+                <worker-pool-name/>
+
+                <!--
+                    Number of threads to be reserved for this verticle in order to do background work.
+                    Applicable only if this verticle is a worker verticle.
+                -->
+                <worker-pool-size/>
+
+                <!--
+                    Max threshold time (in millis) for execution duration of a worker thread.
+                -->
+                <max-worker-execute-time/>
+                
+            </deploy-options>
+            
+            <!--
+                Specify http configuration file only if the verticle is supposed to start an embedded http server.
+            -->
+            <config>/path/to/server.xml</config>
+            
+        </verticle>
+    </verticles>
+    
+</vertx-web>

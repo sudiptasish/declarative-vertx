@@ -1,0 +1,137 @@
+package com.example.rest.handler;
+
+import com.example.rest.model.{RESOURCE};
+import com.example.rest.model.ItemList;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.NoSuchElementException;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+/**
+ * Example REST controller.
+ *
+ * <p>
+ * This controller class is designed to handle events, such as incoming network requests, database responses, or other
+ * events within your application, allowing you to process data and respond accordingly.
+ *
+ */
+@RequestMapping("/api/v1")
+@RestController()
+public class {RESOURCE}Handler {
+    
+    // Counter for auto-incrementing the id.
+    public static final AtomicInteger COUNTER = new AtomicInteger(0);
+    
+    private static final Integer DEFAULT_LIMIT = 10;
+    
+    // In-memory store for storing the elements.
+    // Change it to ConcurrentHashMap for thread-safety.
+    private final Map<String, {RESOURCE}> store = new LinkedHashMap<>();
+
+    @RequestMapping(method = RequestMethod.POST, path = "/{LOWER(RESOURCE)}s", consumes = "application/json")
+    public {RESOURCE} create(@RequestBody {RESOURCE} element) {
+        try {
+            {org.javalabs.decl.api.cust.PostMethodCustomization.entry(${Project})}
+        }
+        catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @PutMapping("/{LOWER(RESOURCE)}s/{id}")
+    public Map modify(@PathVariable String id, @RequestBody {RESOURCE} element) {
+        try {
+            {org.javalabs.decl.api.cust.PutMethodCustomization.entry(${Project})}
+        }
+        catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @GetMapping("/{LOWER(RESOURCE)}s")
+    public ItemList viewAll(@RequestParam(required = false) Map<String, String> params) {
+        try {
+            Integer offset = params.containsKey("offset") ? Integer.valueOf(params.get("offset")) : 0;
+            Integer limit = params.containsKey("limit") ? Integer.valueOf(params.get("limit")) : DEFAULT_LIMIT;
+        
+            {org.javalabs.decl.api.cust.GetAllMethodCustomization.entry(${Project})}
+
+            return build(params, store.size(), items, offset, limit);
+        }
+        catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+    
+    @GetMapping("/{LOWER(RESOURCE)}s/{id}")
+    public {RESOURCE} view(@PathVariable String id) {
+        try {
+            {org.javalabs.decl.api.cust.GetMethodCustomization.entry(${Project})}
+        }
+        catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @DeleteMapping("/{LOWER(RESOURCE)}s/{id}")
+    public {RESOURCE} remove(@PathVariable String id) {
+        try {
+            {org.javalabs.decl.api.cust.DeleteMethodCustomization.entry(${Project})}
+        }
+        catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+    
+    private ItemList build(Map<String, String> params
+            , int total
+            , List<Object> list
+            , int offset
+            , int limit) {
+        
+        // Build the item list.
+        params.remove("offset");
+        params.remove("limit");
+        
+        String path = "/api/v1/{LOWER(RESOURCE)}s";
+        ItemList itemList = new ItemList(total, list, path);
+        
+        itemList.setHasMore(itemList.getTotal() > (offset + limit));
+        
+        String sep = "?";
+        int idx = 0;
+        
+        for (Map.Entry<String, String> me : params.entrySet()) {
+            if (! me.getKey().equals("offset") && ! me.getKey().equals("limit")) {
+                path += sep + me.getKey() + "=" + me.getValue();
+                idx ++;
+
+                if (idx > 0) {
+                    sep = "&";
+                }
+            }
+        }
+        if (itemList.isHasMore()) {
+            itemList.setNextLink(path + sep + "offset=" + (offset + limit) + "&limit=" + limit);
+        }
+        if (offset - limit >= 0) {
+            itemList.setPreviousLink(path + sep + "offset=" + (offset - limit) + "&limit=" + limit);
+        }
+        return itemList;
+    }
+}
+

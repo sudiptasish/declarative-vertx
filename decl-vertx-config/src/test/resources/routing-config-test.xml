@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+
+<routing-config>
+    <!-- Package name where to find all the handler classes -->
+    <package name="com.example.rest"/>
+    
+    <api version="1.0" basePath="/api/v1" produce="application/vnd.ex+json.v1" consume="application/json"/>
+    
+    <resource-mapping name="Employee"
+            path="/employees"
+            resource="com.example.rest.handler.EmployeeHandler"
+            schema="com.example.rest.model.Employee">
+
+        <mapping uri=""     method="POST"   api="create"/>
+        <mapping uri="/:id" method="PUT"    api="modify"/>
+        <mapping uri="/:id" method="GET"    api="view"/>
+        <mapping uri="/:id" method="DELETE" api="remove"/>
+        <mapping uri=""     method="GET"    api="viewAll"/>
+    </resource-mapping>
+</routing-config>

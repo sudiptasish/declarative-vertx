@@ -1,0 +1,99 @@
+## Example REST Service
+
+REST is a software architectural style that defines how an API should work. It's a common way to connect components and applications in microservices architectures.
+This is a sample Java application that can be used as a starter for quickly creating a microservice.
+
+### How to Compile
+
+This application is a simple maven based project. To compile the project run:
+Make sure you are using JDK 11 or above and Maven 3.x
+
+* You can build the project and run the tests by running ```mvn clean package``` or ```gradle build```
+
+It will create the jar file ```{name}-0.0.1-SNAPSHOT.jar``` inside the ```target``` directory.
+All the dependent jars will be copied to `target/lib` directory and are added as classpath entries in the manifest file.
+
+### How to Run
+
+Post successful compilation, run the service by the following method
+```
+java -jar target/{name}-0.0.1-SNAPSHOT.jar
+```
+
+You should see the below logs 
+```
+Started Http Server. Listening to port: 8080
+```
+
+### Review swagger doc
+
+The openapi.yaml file will be generated in
+
+```
+docs/openapi.yaml
+```
+
+To view the swagger doc, navigate to `/docs` directory and run the below command to start a simple http server
+```
+python3 -m http.server -b 127.0.0.1
+```
+
+The server will be started, and you will see the below log:
+```
+Serving HTTP on 127.0.0.1 port 8000 (http://127.0.0.1:8000/) ...
+```
+
+Open the url `http://127.0.0.1:8000/` in your favourite browser and you will see the api documentation.
+
+### Test the service
+
+The service is just a simple REST service. It uses an in-memory map to store the data.
+You can also do with a relational database like MySQL or PostgreSQL.
+
+#### Create an element
+
+```
+curl -X POST\
+     -d '<payload>'\
+     -H "Content-Type:application/json"\
+     http://localhost:8080{URI}s
+```
+
+Sample payload would be
+```
+{ "name": "Socretes", "location": "Greece", "salary": 15000 }
+```
+
+#### Update an element
+
+```
+curl -X PUT\
+     -d '<payload>'\
+     -H "Content-Type:application/json"\
+     http://localhost:8080{URI}s/{id}
+```
+
+#### View all elements
+
+```
+curl -X GET\
+     -H "Content-Type:application/json"\
+     http://localhost:8080{URI}s
+```
+
+#### View specific element
+
+```
+curl -X GET\
+     -H "Content-Type:application/json"\
+     http://localhost:8080{URI}s/{id}
+```
+
+#### Delete specific element
+
+```
+curl -X DELETE\
+     -H "Content-Type:application/json"\
+     http://localhost:8080{URI}s/{id}
+```
+

@@ -1,0 +1,11 @@
+<vertx-web>
+    
+    <verticles>
+        <verticle>
+            <name>MyVerticle</name>
+            <class>org.javalabs.test.MyVerticle</class>
+            <config>/path/to/server.xml</config>
+        </verticle>
+    </verticles>
+    
+</vertx-web>

@@ -1,0 +1,29 @@
+package com.example.rest;
+
+import io.vertx.core.Vertx;
+
+/**
+ * Main class that will initialize the vertx container and start the http server.
+ */
+public class ExampleMain {
+    
+    public static void main(String[] args) throws Exception {
+        ExampleMain ex = new ExampleMain();
+        ex.run();
+    }
+    
+    public void run() {
+        Vertx vertx = Vertx.vertx();
+        vertx.deployVerticle(new HttpServerVerticle(), deployHandler -> {
+            if (deployHandler.failed()) {
+                throw new RuntimeException(deployHandler.cause());
+            }
+            else {
+                String deploymentId = deployHandler.result();
+                System.out.println("Deployment of verticle HttpServerVerticle is successful."
+                        + " Deployment Id: " + deploymentId);
+            }
+        });
+    }
+}
+

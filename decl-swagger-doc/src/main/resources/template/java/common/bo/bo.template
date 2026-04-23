@@ -1,0 +1,110 @@
+package {PACKAGE};
+
+import org.javalabs.decl.util.DateUtil;
+import org.javalabs.decl.util.StopWatch;
+import org.javalabs.jpa.DAOProxy;
+import {AUTH_PACKAGE}.AppUser;
+import {DAO_PACKAGE}.{RESOURCE}DAO;
+import {MODEL_PACKAGE}.{RESOURCE};
+import {UTIL_PACKAGE}.QueryParams;
+import {UTIL_PACKAGE}.SearchCriteria;
+import java.sql.Timestamp;
+import java.util.List;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+/**
+ *
+ * @author schan280
+ */
+public class {RESOURCE}BO {
+    
+    private static final Logger LOGGER = LoggerFactory.getLogger({RESOURCE}BO.class);
+    
+    private final {RESOURCE}DAO {CAMEL(RESOURCE)}DAO;
+
+    public {RESOURCE}BO() {
+        this.{CAMEL(RESOURCE)}DAO = DAOProxy.get({RESOURCE}DAO.class);
+        
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("Initialized Handler: {}. {RESOURCE}DAO: {}", getClass().getSimpleName(), {CAMEL(RESOURCE)}DAO);
+        }
+    }
+
+    public {RESOURCE} create(AppUser user, {RESOURCE} {CAMEL(RESOURCE)}) {
+        StopWatch timer = StopWatch.newTimer();
+        timer.start();
+        
+        {org.javalabs.decl.api.cust.PostMethodCustomization.boEntry(${Project}, ${JavaClass})}
+        {CAMEL(RESOURCE)}DAO.insert({CAMEL(RESOURCE)});
+        timer.stop();
+
+        if (LOGGER.isInfoEnabled()) {
+            LOGGER.info("{RESOURCE} {} created successfully. Elapsed time(ms): {}", timer.elapsedTimeMillis());
+        }
+        return {CAMEL(RESOURCE)};
+    }
+
+    public {RESOURCE} modify(AppUser user, {RESOURCE} {CAMEL(RESOURCE)}) {
+        StopWatch timer = StopWatch.newTimer();
+        timer.start();
+
+        // First fetch the entry, to see if this already exists.
+        {org.javalabs.decl.api.cust.PutMethodCustomization.boEntry(${Project}, ${JavaClass})}
+        {CAMEL(RESOURCE)}DAO.update({CAMEL(RESOURCE)});
+        timer.stop();
+
+        if (LOGGER.isInfoEnabled()) {
+            LOGGER.info("{RESOURCE} record modified successfully. Elapsed time(ms): {}", timer.elapsedTimeMillis());
+        }
+        return existing;
+    }
+
+    public List<{RESOURCE}> viewAll(AppUser user, QueryParams params) {
+        StopWatch timer = StopWatch.newTimer();
+        timer.start();
+
+        SearchCriteria search = SearchCriteria.from(params);
+        List<{RESOURCE}> rows = {CAMEL(RESOURCE)}DAO.query(search);
+
+        timer.stop();
+        if (LOGGER.isInfoEnabled()) {
+            LOGGER.info("Fetched {} expanded {CAMEL(RESOURCE)} record(s). Elapsed time(ms): {}", rows.size(), timer.elapsedTimeMillis());
+        }
+        return rows;
+    }
+
+    public {RESOURCE} view(AppUser user, {ID_DATA_TYPE} id) {
+        StopWatch timer = StopWatch.newTimer();
+        timer.start();
+
+        {RESOURCE} {CAMEL(RESOURCE)} = {CAMEL(RESOURCE)}DAO.find(new {RESOURCE}.{RESOURCE}PK(id));
+        if ({CAMEL(RESOURCE)} == null) {
+            throw new IllegalArgumentException("No {RESOURCE} found for id: " + id);
+        }
+        timer.stop();
+        if (LOGGER.isInfoEnabled()) {
+            LOGGER.info("Fetched {CAMEL(RESOURCE)} details. Elapsed time(ms): {}", timer.elapsedTimeMillis());
+        }
+        return {CAMEL(RESOURCE)};
+    }
+
+    public {RESOURCE} remove(AppUser user, {ID_DATA_TYPE} id) {
+        StopWatch timer = StopWatch.newTimer();
+        timer.start();
+
+        // First fetch the entry, to see if this already exists.
+        {RESOURCE} {CAMEL(RESOURCE)} = {CAMEL(RESOURCE)}DAO.find(new {RESOURCE}.{RESOURCE}PK(id));
+
+        if ({CAMEL(RESOURCE)} == null) {
+            throw new IllegalArgumentException("No {CAMEL(RESOURCE)} found for id: " + id);
+        }
+        {CAMEL(RESOURCE)}DAO.delete({CAMEL(RESOURCE)});
+        timer.stop();
+
+        if (LOGGER.isInfoEnabled()) {
+            LOGGER.info("Deleted {RESOURCE}. Id: {}. Elapsed time(ms): {}", id, timer.elapsedTimeMillis());
+        }
+        return {CAMEL(RESOURCE)};
+    }
+}

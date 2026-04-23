@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Created with Liquid Technologies Online Tools 1.0 (https://www.liquid-technologies.com) -->
+<xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="server-config">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="server-opts" minOccurs="1" maxOccurs="1">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="ssl" type="xs:boolean" minOccurs="0" maxOccurs="1" default="false" />
+              <xs:element name="host" type="xs:string" minOccurs="0" maxOccurs="1" default="0.0.0.0" />
+              <xs:element name="port" type="xs:unsignedInt" minOccurs="0" maxOccurs="1" default="8080" />
+              <xs:element name="accept-backlog" type="xs:byte" minOccurs="0" maxOccurs="1" default="-1" />
+              <xs:element name="client-auth" type="xs:string" minOccurs="0" maxOccurs="1" default="NONE" />
+              <xs:element name="sni" type="xs:boolean" minOccurs="0" maxOccurs="1" default="false" />
+              <xs:element name="use-proxy-protocol" type="xs:boolean" minOccurs="0" maxOccurs="1" default="false" />
+              <xs:element name="proxy-protocol-timeout" type="xs:unsignedInt" minOccurs="0" maxOccurs="1" default="10000" />
+              <xs:element name="register-write-handler" type="xs:boolean" minOccurs="0" maxOccurs="1" default="false" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="tcp-opts" minOccurs="0" maxOccurs="1">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="tcp-no-delay" type="xs:boolean" minOccurs="0" maxOccurs="1" default="true" />
+              <xs:element name="tcp-keep-alive" type="xs:boolean" minOccurs="0" maxOccurs="1" default="false" />
+              <xs:element name="so-linger" type="xs:byte" minOccurs="0" maxOccurs="1" default="-1" />
+              <xs:element name="idle-timeout" type="xs:unsignedInt" minOccurs="0" maxOccurs="1" default="0" />
+              <xs:element name="read-idle-timeout" type="xs:unsignedInt" minOccurs="0" maxOccurs="1" default="0" />
+              <xs:element name="write-idle-timeout" type="xs:unsignedInt" minOccurs="0" maxOccurs="1" default="0" />
+              <xs:element name="ssl" type="xs:boolean" minOccurs="0" maxOccurs="1" default="false" />
+              <xs:element name="tcp-fast-open" type="xs:boolean" minOccurs="0" maxOccurs="1" default="false" />
+              <xs:element name="tcp-cork" type="xs:boolean" minOccurs="0" maxOccurs="1" default="false" />
+              <xs:element name="tcp-quick-ack" type="xs:boolean" minOccurs="0" maxOccurs="1" default="false" />
+              <xs:element name="tcp-user-timeout" type="xs:unsignedInt" minOccurs="0" maxOccurs="1" default="0" />
+              <xs:element name="ssl-opts" minOccurs="0" maxOccurs="1">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="ssl-handshake-timeout" type="xs:unsignedInt" minOccurs="0" maxOccurs="1" default="10000" />
+                    <xs:element name="key-cert-options" type="xs:string" minOccurs="0" maxOccurs="1" default="" />
+                    <xs:element name="trust-options" type="xs:string" minOccurs="0" maxOccurs="1" default="" />
+                    <xs:element name="enabled-cipher-suites" type="xs:string" minOccurs="0" maxOccurs="1" default="" />
+                    <xs:element name="crl-paths" type="xs:string" minOccurs="0" maxOccurs="1" default="" />
+                    <xs:element name="crl-values" type="xs:string" minOccurs="0" maxOccurs="1" default="" />
+                    <xs:element name="use-alpn" type="xs:boolean" minOccurs="0" maxOccurs="1" default="false" />
+                    <xs:element name="enabled-secure-transport-protocols" type="xs:string" minOccurs="0" maxOccurs="1" default="TLSv1,TLSv1.1,TLSv1.2,TLSv1.3" />
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="network-opts" minOccurs="0" maxOccurs="1">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="send-buffer-size" type="xs:int" minOccurs="0" maxOccurs="1" default="-1" />
+              <xs:element name="receive-buffer-size" type="xs:int" minOccurs="0" maxOccurs="1" default="-1" />
+              <xs:element name="reuse-address" type="xs:boolean" minOccurs="0" maxOccurs="1" default="true" />
+              <xs:element name="traffic-class" type="xs:byte" minOccurs="0" maxOccurs="1" default="-1" />
+              <xs:element name="log-activity" type="xs:boolean" minOccurs="0" maxOccurs="1" default="false" />
+              <xs:element name="reuse-port" type="xs:boolean" minOccurs="0" maxOccurs="1" default="false" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="http-opts" minOccurs="0" maxOccurs="1">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="compression-supported" type="xs:boolean" minOccurs="0" maxOccurs="1" default="false" />
+              <xs:element name="compression-level" type="xs:unsignedByte" minOccurs="0" maxOccurs="1" default="6" />
+              <xs:element name="max-web-socket-frame-size" type="xs:unsignedInt" minOccurs="0" maxOccurs="1" default="65536" />
+              <xs:element name="max-web-socket-message-size" type="xs:unsignedInt" minOccurs="0" maxOccurs="1" default="262144" />
+              <xs:element name="handle-100-continue-automatically" type="xs:boolean" minOccurs="0" maxOccurs="1" default="false" />
+              <xs:element name="max-chunk-size" type="xs:unsignedInt" minOccurs="0" maxOccurs="1" default="8192" />
+              <xs:element name="max-initial-line-length" type="xs:unsignedInt" minOccurs="0" maxOccurs="1" default="4096" />
+              <xs:element name="max-header-size" type="xs:unsignedInt" minOccurs="0" maxOccurs="1" default="8192" />
+              <xs:element name="max-form-attribute-size" type="xs:unsignedInt" minOccurs="0" maxOccurs="1" default="8192" />
+              <xs:element name="max-form-fields" type="xs:unsignedInt" minOccurs="0" maxOccurs="1" default="256" />
+              <xs:element name="max-form-buffered-bytes" type="xs:unsignedInt" minOccurs="0" maxOccurs="1" default="1024" />
+              <xs:element name="initial-settings">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="header-table-size" type="xs:unsignedInt" minOccurs="0" maxOccurs="1" default="4096" />
+                    <xs:element name="push-enabled" type="xs:boolean" minOccurs="0" maxOccurs="1" default="true" />
+                    <xs:element name="max-concurrent-streams" type="xs:unsignedInt" minOccurs="0" maxOccurs="1" default="4294967295" />
+                    <xs:element name="initial-window-size" type="xs:unsignedInt" minOccurs="0" maxOccurs="1" default="65535" />
+                    <xs:element name="max-frame-size" type="xs:unsignedInt" minOccurs="0" maxOccurs="1" default="16384" />
+                    <xs:element name="max-header-list-size" type="xs:unsignedInt" minOccurs="0" maxOccurs="1" default="8192" />
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+              <xs:element name="alpn-versions" minOccurs="0" maxOccurs="1" default="HTTP_2,HTTP_1_1" />
+              <xs:element name="http2-clear-text-enabled" type="xs:boolean" minOccurs="0" maxOccurs="1" default="true" />
+              <xs:element name="http2-connection-window-size" type="xs:int" minOccurs="0" maxOccurs="1" default="-1" />
+              <xs:element name="decompression-supported" type="xs:boolean" minOccurs="0" maxOccurs="1" default="false" />
+              <xs:element name="accept-unmasked-frames" type="xs:boolean" minOccurs="0" maxOccurs="1" default="false" />
+              <xs:element name="decoder-initial-buffer-size" type="xs:unsignedByte" minOccurs="0" maxOccurs="1" default="128" />
+              <xs:element name="per-frame-web-socket-compression-supported" type="xs:boolean" minOccurs="0" maxOccurs="1" default="true" />
+              <xs:element name="per-message-web-socket-compression-supported" type="xs:boolean" minOccurs="0" maxOccurs="1" default="true" />
+              <xs:element name="web-socket-compression-level" type="xs:unsignedByte" minOccurs="0" maxOccurs="1" default="6" />
+              <xs:element name="web-socket-preferred-client-no-context" type="xs:boolean" minOccurs="0" maxOccurs="1" default="false" />
+              <xs:element name="web-socket-allow-server-no-context" type="xs:boolean" minOccurs="0" maxOccurs="1" default="false" />
+              <xs:element name="web-socket-closing-timeout" type="xs:unsignedInt" minOccurs="0" maxOccurs="1" default="10000" />
+              <xs:element name="tracing-policy" type="xs:string" minOccurs="0" maxOccurs="1" default="ALWAYS" />
+              <xs:element name="register-web-socket-write-handlers" type="xs:boolean" minOccurs="0" maxOccurs="1" default="false" />
+              <xs:element name="http2-rst-flood-max-rst-frame-per-window" type="xs:unsignedInt" minOccurs="0" maxOccurs="1" default="200" />
+              <xs:element name="http2-rst-flood-window-duration" type="xs:unsignedInt" minOccurs="0" maxOccurs="1" default="30000" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="cross-origin" minOccurs="0" maxOccurs="1">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="allowed-headers" minOccurs="0" maxOccurs="1">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="allowed-header" type="xs:string" minOccurs="0" maxOccurs="unbounded" />
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+              <xs:element name="allowed-methods" minOccurs="0" maxOccurs="1">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="allowed-method" type="xs:string" minOccurs="0" maxOccurs="unbounded" />
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="keystore-config" minOccurs="0" maxOccurs="1">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="store-name" />
+              <xs:element name="store-password" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="truststore-config" minOccurs="0" maxOccurs="1">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="store-name" />
+              <xs:element name="store-password" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="context-root" minOccurs="1" maxOccurs="1" type="xs:string" />
+        <xs:element name="access-log" minOccurs="0" maxOccurs="1">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="log-format" type="xs:string" minOccurs="0" maxOccurs="1" />
+              <xs:element name="route" type="xs:string" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="security-constraint" minOccurs="0" maxOccurs="1">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="auth-handler" type="xs:string"/>
+              <xs:element name="jwt-opts" minOccurs="0" maxOccurs="1">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="algorithm" type="xs:string" minOccurs="0" maxOccurs="1"/>
+                    <xs:element name="issuer" type="xs:string" minOccurs="0" maxOccurs="1"/>
+                    <xs:element name="audience" type="xs:string" minOccurs="0" maxOccurs="1"/>
+                    <xs:element name="expiry" type="xs:unsignedInt" minOccurs="0" maxOccurs="1"/>
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+              <xs:element name="auth-constraint">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="auth-type" type="xs:string" />
+                    <xs:element name="url-patterns">
+                      <xs:complexType>
+                        <xs:sequence>
+                          <xs:element maxOccurs="unbounded" name="url-pattern" type="xs:string" />
+                        </xs:sequence>
+                      </xs:complexType>
+                    </xs:element>
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="routing-config" type="xs:string" minOccurs="1" maxOccurs="1" default="routing-config.xml" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

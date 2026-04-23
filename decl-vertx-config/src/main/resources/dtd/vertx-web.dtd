@@ -1,0 +1,474 @@
+<?xml version='1.0' encoding='UTF-8'?>
+
+<!--
+    TODO define vocabulary identification
+    PUBLIC ID: -//vendor//vocabulary//EN
+    SYSTEM ID: http://server/path/vertx-web-test.dtd
+
+-->
+
+<!--- 
+    Vert.x-Web is configured by using configuration stores to define settings that are then
+    loaded into the application using a ConfigRetriever. This allows for flexible configuration 
+    options, including loading from files, the event bus, or even directly from xml.
+-->
+<!ELEMENT vertx-web (context-listener|context-params|verticles)*>
+
+<!--- Optional context listener for Vert.x -->
+<!ELEMENT context-listener EMPTY>
+
+<!---
+    Tuning parameters for the Vert.x instance.
+ -->
+<!ELEMENT context-params (blocked-thread-check-interval|event-loop-pool-size|warning-exception-time|disable-tccl|worker-pool-size|max-event-loop-execute-time|max-worker-execute-time|error-handler|internal-blocking-pool-size|event-bus-options|prefer-native-transport|metric-class|cluster-manager|ha-enabled|address-resolver-options|quorum-size|ha-group|metrics-options|tracing-options|use-daemon-thread|file-system-options)*>
+
+<!---
+    The default event loop pool size is twice the number of cores on the machine.
+    You can override the value by specifying a number here. E.g., 2, 4, etc.
+-->
+<!ELEMENT event-loop-pool-size (#PCDATA)>
+
+<!---
+    An alternative way to run blocking code is to use a worker verticle. A worker
+    verticle is always executed with a thread from the worker pool. By default 
+    blocking code is executed on the Vert.x worker pool, configured with worker-pool-size.
+-->
+<!ELEMENT worker-pool-size (#PCDATA)>
+
+<!---
+    The default value of blocked thread check interval = 1000 ms.
+    You can override the value by specifying the below paraeter.
+-->
+<!ELEMENT blocked-thread-check-interval (#PCDATA)>
+
+<!---
+    Configure the maximum time an event loop can be blocked, which is useful for preventing
+    long-running blocking operations from impacting the system's performance.
+    This is typically set using the VertxOptions class. The default value for the maximum event
+    loop execution time is 2 seconds.
+-->
+<!ELEMENT max-event-loop-execute-time (#PCDATA)>
+
+<!---
+    Setting dictates the maximum amount of time a worker thread can be blocked before being
+    interrupted. By default, this is set to 60 seconds. This setting helps prevent blocking 
+    worker threads from impacting other verticles or event loops. 
+-->
+<!ELEMENT max-worker-execute-time (#PCDATA)>
+
+<!--- 
+    Vert.x is designed to be non-blocking, meaning it uses an event loop to handle asynchronous
+    operations. However, some tasks are inherently blocking (e.g., waiting for a file to be read,
+    waiting for a database query to complete). The internal blocking pool provides a thread pool
+    for handling these blocking operations without blocking the event loop.
+-->
+<!ELEMENT internal-blocking-pool-size (#PCDATA)>
+
+<!--- 
+    In Vert.x a cluster manager is used for various functions including:
+    1. Discovery and group membership of Vert.x nodes in a cluster
+    2. Maintaining cluster wide topic subscriber lists (so we know which nodes are interested in which event bus addresses)
+    3. Distributed Map support
+    4. Distributed Locks
+    5. Distributed Counters
+
+Cluster managers do not handle the event bus inter-node transport, this is done directly by Vert.x with TCP connections.
+-->
+<!ELEMENT cluster-manager EMPTY>
+
+<!--- 
+    High Availability (HA) is enabled through this configuration, specifically by setting the HA
+    property to true. This ensures that your Verticles and other core components are deployed across
+    a cluster of Vert.x nodes, providing resilience against node failures. When HA is enabled, 
+    Vert.x will automatically re-deploy affected Verticles to other healthy nodes in the cluster
+    if a node fails, ensuring continuous application operation.
+-->
+<!ELEMENT ha-enabled (#PCDATA)>
+
+<!--- 
+    The quorum size refers to the minimum number of nodes required in a cluster to maintain a quorum
+    for operations like HA (High Availability) and distributed data consistency. It's crucial for 
+    ensuring that the cluster remains operational and that data is appropriately replicated even if
+    some nodes fail.
+-->
+<!ELEMENT quorum-size (#PCDATA)>
+
+<!--- 
+    Set the high availability group name.
+-->
+<!ELEMENT ha-group (#PCDATA)>
+
+<!--- 
+    It provides configuration options for how Vert.x interacts with the file system. 
+    Key options include enabling class path resolving, setting a file cache directory for 
+    improved performance, and controlling file caching for classpath resources.
+-->
+<!ELEMENT file-system-options (class-path-resolving-enabled|file-caching-enabled|file-cache-dir)*>
+
+<!--- 
+    When set, Vert.x will attempt to load files from the classpath if they are not found on the 
+    filesystem. This is useful for applications that package resources directly within the 
+    application archive.
+-->
+<!ELEMENT class-path-resolving-enabled (#PCDATA)>
+
+<!--- 
+    If true, files accessed through the classpath will be cached on the filesystem, 
+    even if classPathResolvingEnabled is false.
+-->
+<!ELEMENT file-caching-enabled (#PCDATA)>
+
+<!--- 
+    Specifies the directory where files from the classpath will be extracted and cached for 
+    faster access. This can significantly improve IO performance when accessing files 
+    packaged within the application.
+-->
+<!ELEMENT file-cache-dir (#PCDATA)>
+
+<!--- 
+    Vert.x uses a metrics SPI (Service Provider Interface) to provide metrics for various components
+    like HTTP clients, servers, event bus, and pools. Micrometer and Dropwizard are examples of 
+    metrics implementations that Vert.x supports. You can configure Vert.x to use a specific metrics 
+    implementation and customize the metrics it collects, including enabling or disabling specific 
+    labels for more granular data
+-->
+<!ELEMENT metrics-options (enabled|factory)*>
+
+<!--- 
+    Indicates whether metric collection is enabled.
+-->
+<!ELEMENT enabled (#PCDATA)>
+
+<!--- 
+    Factory class for creating metric instance.
+-->
+<!ELEMENT factory EMPTY>
+
+<!--- 
+    Used to configure distributed tracing behavior. They allow you to control how tracing is handled 
+    across different components of your application, such as HTTP servers and clients. Key aspects 
+    include the tracing policy (PROPAGATE, ALWAYS, or IGNORE), and the ability to create custom tracing 
+    options through a VertxTracerFactory.
+-->
+<!ELEMENT tracing-options (factory)*>
+
+<!--- 
+    Factory class for creating standard tracer.
+-->
+<!ELEMENT factory EMPTY>
+
+<!--- 
+    This setting determines the threshold for triggering a stack trace when a thread is blocked. 
+    By default, the blocking thread warning appears after 60 seconds. Setting a lower 
+    warningExceptionTime value, such as 2 seconds, causes the warning to include a stack trace 
+    whenever it's triggered, while a higher value might only display the warning without a stack trace.
+-->
+<!ELEMENT warning-exception-time (#PCDATA)>
+
+<!--- 
+    Set whether to prefer the native transport to the NIO transport.
+-->
+<!ELEMENT prefer-native-transport (#PCDATA)>
+
+<!--- 
+    The TCCL is a thread-local variable used to determine which classloader to use when loading 
+    classes for a given thread.
+    This will prevent Vert.x from setting the Context's classloader as the thread context classloader 
+    on actions executed on that Context. While this can be a workaround for certain issues, it's 
+    important to be aware of potential consequences, as it may affect security checks and other 
+    aspects of the application's behavior. 
+-->
+<!ELEMENT disable-tccl (#PCDATA)>
+
+<!--- 
+    This setting will enable Vert.x to use daemon threads for Verticles, meaning they don't prevent 
+    the JVM from exiting when they are no longer running. This is a design choice to ensure Vert.x 
+    applications can be properly shutdown and resources are released even if Verticles are still running.
+-->
+<!ELEMENT use-daemon-thread (#PCDATA)>
+
+<!--- 
+    It allows customization of the Vert.x Event Bus. It's used to configure the default behavior 
+    of the event bus, which is a distributed messaging system within Vert.x.
+-->
+<!ELEMENT event-bus-options (cluster-public-host|cluster-public-port|cluster-ping-interval|cluster-ping-reply-interval|accept-backlog|reconnect-interval|reconnect-attempts|connect-timeout|trust-all|log-activity)*>
+
+<!--- 
+    The public host to advertise for clustering. If null, the same host as the cluster host will be used.
+-->
+<!ELEMENT cluster-public-host EMPTY>
+
+<!--- 
+    The public port to advertise for clustering. If -1, the same port as the cluster port will be used.
+-->
+<!ELEMENT cluster-public-port (#PCDATA)>
+
+<!--- 
+    It refers to the frequency at which a node in a cluster checks for other cluster members. 
+    The default value is 20,000 milliseconds (20 seconds). This setting determines how often a 
+    node sends "ping" messages to other nodes in the cluster to confirm their presence and health.
+-->
+<!ELEMENT cluster-ping-interval (#PCDATA)>
+
+<!--- 
+    It controls the timeout for receiving a reply after sending a ping message to other nodes 
+    in a Vert.x cluster. This setting determines how long a node waits for a response before 
+    it considers a node in the cluster to be dead. The default value is 20,000 milliseconds (20 seconds).
+-->
+<!ELEMENT cluster-ping-reply-interval (#PCDATA)>
+
+<!--- 
+    Setting for the Event Bus determines how many pending client connections can be queued when 
+    the Event Bus is busy. The default value is 1024. This setting is part of the EventBusOptions 
+    and can be adjusted to fit specific application needs.
+-->
+<!ELEMENT accept-backlog (#PCDATA)>
+
+<!--- 
+    It configures how long the Event Bus waits before attempting to reconnect after a connection 
+    failure. This setting is crucial for ensuring reliable communication, especially in scenarios
+    where network connectivity might be intermittent. The default value is 50 milliseconds.
+-->
+<!ELEMENT reconnect-interval (#PCDATA)>
+
+<!--- 
+    In Vert.x, the EventBus offers automatic reconnection attempts after a disconnection. 
+    You can configure the reconnection behavior using EventBusOptions and setting the reconnect-interval 
+    to control how often to try reconnecting. The reconnectAttempts setting, or similar configuration
+    option, determines the maximum number of reconnection attempts before giving up.
+-->
+<!ELEMENT reconnect-attempts (#PCDATA)>
+
+<!--- 
+    This setting on the Event Bus determines how long the Event Bus will wait for a connection 
+    to be established before timing out. This timeout applies when a client attempts to connect
+    to an Event Bus node.
+-->
+<!ELEMENT connect-timeout (#PCDATA)>
+
+<!--- 
+    It allows all consumers to receive messages published to any address. This means any Verticle
+    can send a message to any other Verticle without explicit trust or authorization. It's a 
+    simplified approach to messaging, especially useful in development or small applications.
+-->
+<!ELEMENT trust-all (#PCDATA)>
+
+<!--- Put your DTDDoc comment here. -->
+<!ELEMENT log-activity (#PCDATA)>
+
+<!--- 
+    This setting is used to configure the behavior of the Vert.x DNS resolver. They allow you 
+    to specify DNS servers, configure cache TTL, and adjust other resolver settings.
+-->
+<!ELEMENT address-resolver-options (hosts-path|hosts-refresh-period|servers|opt-resource-enabled|cache-min-time-to-live|cache-max-time-to-live|cache-negative-time-to-live|query-timeout|max-queries|rd-flag|search-domains|ndots|rotate-servers|round-robin-inet-address)*>
+
+<!--- 
+    Provides a way to configure the address resolution behavior, including specifying an 
+    alternative hosts file. The hostsPath option allows you to point to a specific file that 
+    the DNS resolver should use instead of the system's default /etc/hosts file (or its 
+    equivalent on other operating systems).
+-->
+<!ELEMENT hosts-path EMPTY>
+
+<!--- 
+    Controls how frequently the resolver checks for updates to the /etc/hosts file (or the 
+    configured hosts file). Setting it to a positive value enables periodic reloading of the 
+    /etc/hosts file, allowing for dynamic updates to hostname mappings.
+-->
+<!ELEMENT hosts-refresh-period EMPTY>
+
+<!--- 
+    Allows you to specify a list of DNS server addresses that Vert.x will use when resolving 
+    hostnames to IP addresses. This is crucial for applications that need to connect to external 
+    services or other applications by domain name rather than directly by IP address.
+-->
+<!ELEMENT servers EMPTY>
+
+<!--- 
+    Controls whether a DNS query includes an optional resource record (OPT RR) that hints 
+    to the DNS server about the resolver's capacity to handle large responses. Setting this 
+    to true (the default) enables the feature, potentially improving performance by allowing 
+    larger responses.
+-->
+<!ELEMENT opt-resource-enabled EMPTY>
+
+<!--- 
+    Specifies the minimum time in seconds that a successfully resolved DNS address will be cached. 
+    This setting ensures that even if a DNS record has a very short TTL (Time To Live), the 
+    resolved address will be kept in the cache for at least the specified minimum time, preventing 
+    excessive DNS lookups.
+-->
+<!ELEMENT cache-min-time-to-live EMPTY>
+
+<!--- 
+    Controls the maximum time (in seconds) that a successfully resolved DNS address will be cached. 
+    This setting helps optimize DNS lookups by avoiding repeated queries for the same address within 
+    a certain timeframe.
+-->
+<!ELEMENT cache-max-time-to-live EMPTY>
+
+<!--- 
+    Specifies the duration (in seconds) for which failed hostname resolutions are cached. During 
+    this time, subsequent attempts to resolve the same hostname will not trigger a DNS query, but 
+    instead, return the cached negative result, improving performance by reducing DNS traffic and 
+    speeding up responses for failed lookups.
+-->
+<!ELEMENT cache-negative-time-to-live EMPTY>
+
+<!--- 
+    This setting determines the maximum amount of time (in milliseconds) that the address resolver 
+    will wait for a response to a DNS query before considering it a timeout. Essentially, it controls 
+    how long Vert.x will wait for a DNS server to respond to a request before giving up and potentially 
+    trying another server or action.
+-->
+<!ELEMENT query-timeout EMPTY>
+
+<!--- 
+    Allows you to configure the maximum number of queries sent during a hostname resolution.
+    This is useful for managing DNS resolution behavior and potentially preventing excessive queries. 
+    The default value is typically determined by the operating system or set to 1.
+-->
+<!ELEMENT max-queries EMPTY>
+
+<!--- 
+    It controls the "Recursion Desired" (RD) flag in DNS queries. Setting it to true (the default) 
+    means the resolver will request recursive resolution from the DNS server, while false means it 
+    will not. This flag influences how the DNS server handles the query and whether it attempts to
+    resolve the domain name further if it doesn't have a direct answer.
+-->
+<!ELEMENT rd-flag EMPTY>
+
+<!--- 
+    Search domains are used when resolving hostnames that are not fully qualified (i.e., 
+    they don't have a domain suffix). The resolver will append each search domain to the 
+    hostname until a valid IP address is found.
+-->
+<!ELEMENT search-domains EMPTY>
+
+<!--- 
+    Controls how the resolver handles hostnames with dots when resolving DNS addresses using 
+    search domains. Specifically, it determines the number of dots a hostname must contain 
+    before the search domains are ignored and the hostname is resolved directly.
+-->
+<!ELEMENT ndots EMPTY>
+
+<!--- 
+    This option, when set to true, enables round-robin selection of DNS servers from the configured 
+    list, distributing the load across them. This can improve DNS resolution reliability and performance 
+    by avoiding reliance on a single server.
+-->
+<!ELEMENT rotate-servers EMPTY>
+
+<!--- 
+    It enables a round-robin selection of IP addresses when resolving a hostname to multiple addresses. 
+    This means that instead of always using the first IP address returned by the DNS server, Vert.x 
+    will cycle through the available IP addresses in a round-robin fashion, distributing the connection 
+    load across them.
+-->
+<!ELEMENT round-robin-inet-address EMPTY>
+
+<!--- 
+    The vertx error handler class.
+-->
+<!ELEMENT error-handler (#PCDATA)>
+
+<!--- Put your DTDDoc comment here. -->
+<!ELEMENT metric-class (#PCDATA)>
+
+<!--- 
+    Specify the set of verticles to be registered with Vert.x runtime. 
+-->
+<!ELEMENT verticles (verticle)*>
+
+<!--- 
+    Verticles are chunks of code that get deployed and run by Vert.x. 
+    A Vert.x instance maintains N event loop threads (where N by default is core * 2) by default.
+    Standard verticles are assigned an event loop thread when they are created and the start 
+    method is called with that event loop. When you call any other methods that takes a handler 
+    on a core API from an event loop then Vert.x will guarantee that those handlers, when called, 
+    will be executed on the same event loop.
+-->
+<!ELEMENT verticle (name|class|worker|threading-model|isolation-group|ha|extra-classpath|instances|worker-pool-name|worker-pool-size|max-worker-execute-time|config)*>
+
+<!--- 
+    Specify name of the verticle.
+-->
+<!ELEMENT name (#PCDATA)>
+
+<!--- 
+    The verticle class. Must be a subclass of io.vertx.core.Verticle.
+-->
+<!ELEMENT class (#PCDATA)>
+
+<!--- 
+    Determine whether a verticle is a worker verticle or not.
+    A worker verticle in Vert.x is a type of verticle that executes its code on a thread from 
+    a worker thread pool, rather than on the event loop. This allows worker verticles to 
+    handle blocking operations without blocking the event loop, which is crucial for maintaining 
+    the responsiveness of the application.
+-->
+<!ELEMENT worker (#PCDATA)>
+
+<!--- 
+    A vertical threading model is a method where a process (like an application) is divided 
+    into multiple threads, and each thread handles a distinct task within the application's 
+    execution.
+-->
+<!ELEMENT threading-model EMPTY>
+
+<!--- 
+    It relate to how verticles are deployed and potentially share resources, especially 
+    classloaders. While the concept of explicit isolation groups is not a core feature in 
+    Vert.x itself, verticles can be deployed in a way that effectively isolates them.
+-->
+<!ELEMENT isolation-group EMPTY>
+
+<!--- 
+    Indicates whether it's a high availability verticle.
+-->
+<!ELEMENT ha (#PCDATA)>
+
+<!--- 
+    When a Verticle needs to access resources beyond the libraries that are part of the main 
+    Vert.x application, you use extra-classpath to provide these external dependencies during 
+    deployment. This allows Verticles to use specific versions of libraries or utilize custom 
+    resources.
+-->
+<!ELEMENT extra-classpath EMPTY>
+
+<!--- 
+    The number of instances of the verticle to instantiate in the Vert.x server. Each verticle
+    instance is strictly single threaded so to scale your application across available cores 
+    you might want to deploy more than one instance. If omitted a single instance will be deployed.
+-->
+<!ELEMENT instances (#PCDATA)>
+
+<!--- 
+    It allows you to specify which worker pool a verticle will use when running blocking 
+    or long-running code. When a worker pool name is set, the verticle will use that 
+    named worker pool, otherwise, it will use the default Vert.x worker pool.
+-->
+<!ELEMENT worker-pool-name EMPTY>
+
+<!---
+    An alternative way to run blocking code is to use a worker verticle. A worker
+    verticle is always executed with a thread from the worker pool. By default 
+    blocking code is executed on the Vert.x worker pool, configured with worker-pool-size.
+-->
+<!ELEMENT worker-pool-size (#PCDATA)>
+
+<!---
+    Setting dictates the maximum amount of time a worker thread can be blocked before being
+    interrupted. By default, this is set to 60 seconds. This setting helps prevent blocking 
+    worker threads from impacting other verticles or event loops. 
+-->
+<!ELEMENT max-worker-execute-time (#PCDATA)>
+
+<!--- 
+    Specify an optional configuration file that will be read by the specific Verticle instance.
+    If the Verticle starts an embedded Http server, then provide the server configuration in a 
+    special file called "server.xml".
+
+    Refer to server.dtd for more details.
+-->
+<!ELEMENT config (#PCDATA)>

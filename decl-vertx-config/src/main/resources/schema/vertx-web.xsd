@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="vertx-web">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="context-listener" minOccurs="0" maxOccurs="1" />
+        <xs:element name="context-params" minOccurs="0" maxOccurs="1">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="event-loop-pool-size" minOccurs="0" maxOccurs="1" type="xs:unsignedShort" default="2"/>
+              <xs:element name="worker-pool-size" minOccurs="0" maxOccurs="1" type="xs:unsignedShort" default="20" />
+              <xs:element name="blocked-thread-check-interval" minOccurs="0" maxOccurs="1" type="xs:unsignedLong" default="1000" />
+              <xs:element name="max-event-loop-execute-time" minOccurs="0" maxOccurs="1" type="xs:unsignedLong" default="2000" />
+              <xs:element name="max-worker-execute-time" minOccurs="0" maxOccurs="1" type="xs:unsignedLong" default="60000" />
+              <xs:element name="internal-blocking-pool-size" minOccurs="0" maxOccurs="1" type="xs:unsignedByte" default="20" />
+              <xs:element name="cluster-manager" minOccurs="0" maxOccurs="1" type="xs:string" nillable="true" />
+              <xs:element name="ha-enabled" minOccurs="0" maxOccurs="1" type="xs:boolean" default="false" />
+              <xs:element name="quorum-size" minOccurs="0" maxOccurs="1" type="xs:unsignedByte" default="1" />
+              <xs:element name="ha-group" minOccurs="0" maxOccurs="1" type="xs:string" default="__DEFAULT__" />
+              <xs:element name="file-system-options" minOccurs="0" maxOccurs="1" >
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="class-path-resolving-enabled" minOccurs="0" maxOccurs="1" type="xs:boolean" default="true" />
+                    <xs:element name="file-caching-enabled" minOccurs="0" maxOccurs="1" type="xs:boolean" default="true" />
+                    <xs:element name="file-cache-dir" minOccurs="0" maxOccurs="1" type="xs:string" />
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+              <xs:element name="metrics-options" minOccurs="0" maxOccurs="1">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="enabled" minOccurs="0" maxOccurs="1" type="xs:boolean" default="false" />
+                    <xs:element name="factory" minOccurs="0" maxOccurs="1" type="xs:string" />
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+              <xs:element name="tracing-options" minOccurs="0" maxOccurs="1">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="factory" minOccurs="0" maxOccurs="1" type="xs:string" />
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+              <xs:element name="warning-exception-time" minOccurs="0" maxOccurs="1" type="xs:unsignedShort" default="5000" />
+              <xs:element name="prefer-native-transport" minOccurs="0" maxOccurs="1" type="xs:boolean" default="false" />
+              <xs:element name="disable-tccl" minOccurs="0" maxOccurs="1" type="xs:boolean" default="false" />
+              <xs:element name="use-daemon-thread" minOccurs="0" maxOccurs="1" type="xs:boolean" default="false" />
+              <xs:element name="event-bus-options" minOccurs="0" maxOccurs="1">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="cluster-public-host" minOccurs="0" maxOccurs="1" type="xs:string" />
+                    <xs:element name="cluster-public-port" minOccurs="0" maxOccurs="1" type="xs:unsignedByte" default="0" />
+                    <xs:element name="cluster-ping-interval" minOccurs="0" maxOccurs="1" type="xs:unsignedShort" default="20000" />
+                    <xs:element name="cluster-ping-reply-interval" minOccurs="0" maxOccurs="1" type="xs:unsignedShort" default="20000" />
+                    <xs:element name="accept-backlog" minOccurs="0" maxOccurs="1" type="xs:byte" default="-1" />
+                    <xs:element name="reconnect-interval" minOccurs="0" maxOccurs="1" type="xs:unsignedShort" default="1000" />
+                    <xs:element name="reconnect-attempts" minOccurs="0" maxOccurs="1" type="xs:unsignedByte" default="1" />
+                    <xs:element name="connect-timeout" minOccurs="0" maxOccurs="1" type="xs:unsignedShort" default="60000" />
+                    <xs:element name="trust-all" minOccurs="0" maxOccurs="1" type="xs:boolean" default="true" />
+                    <xs:element name="log-activity" minOccurs="0" maxOccurs="1" type="xs:boolean" default="false" />
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+              <xs:element name="address-resolver-options" minOccurs="0" maxOccurs="1">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="hosts-path" minOccurs="0" maxOccurs="1" type="xs:string" />
+                    <xs:element name="hosts-refresh-period" minOccurs="0" maxOccurs="1" type="xs:unsignedInt" />
+                    <xs:element name="servers" minOccurs="0" maxOccurs="1" type="xs:string" />
+                    <xs:element name="opt-resource-enabled" minOccurs="0" maxOccurs="1" type="xs:boolean" />
+                    <xs:element name="cache-min-time-to-live" minOccurs="0" maxOccurs="1" type="xs:unsignedInt" />
+                    <xs:element name="cache-max-time-to-live" minOccurs="0" maxOccurs="1" type="xs:unsignedInt" />
+                    <xs:element name="cache-negative-time-to-live" minOccurs="0" maxOccurs="1" type="xs:unsignedInt" />
+                    <xs:element name="query-timeout" minOccurs="0" maxOccurs="1" type="xs:unsignedInt" />
+                    <xs:element name="max-queries" minOccurs="0" maxOccurs="1" type="xs:unsignedInt" />
+                    <xs:element name="rd-flag" minOccurs="0" maxOccurs="1" type="xs:boolean" />
+                    <xs:element name="search-domains" minOccurs="0" maxOccurs="1" type="xs:string" />
+                    <xs:element name="ndots" minOccurs="0" maxOccurs="1" type="xs:int" />
+                    <xs:element name="rotate-servers" minOccurs="0" maxOccurs="1" type="xs:boolean" />
+                    <xs:element name="round-robin-inet-address" minOccurs="0" maxOccurs="1" type="xs:boolean" />
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+              <xs:element name="error-handler" minOccurs="0" maxOccurs="1" type="xs:string" />
+              <xs:element name="metric-class" minOccurs="0" maxOccurs="1" type="xs:string" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="verticles" minOccurs="1" maxOccurs="1">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="verticle" minOccurs="1" maxOccurs="unbounded">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="name" minOccurs="1" maxOccurs="1" type="xs:string" />
+                    <xs:element name="class" minOccurs="1" maxOccurs="1" type="xs:string" />
+                    <xs:element name="config" minOccurs="0" maxOccurs="1" type="xs:string" />
+                    <xs:element name="deploy-options" minOccurs="0" maxOccurs="1">
+                      <xs:complexType>
+                        <xs:sequence>
+                          <xs:element name="worker" minOccurs="0" maxOccurs="1" type="xs:boolean" default="false" />
+                          <xs:element name="threading-model" minOccurs="0" maxOccurs="1" type="xs:string" default="EVENT_LOOP" />
+                          <xs:element name="isolation-group" minOccurs="0" maxOccurs="1" type="xs:string" />
+                          <xs:element name="ha" minOccurs="0" maxOccurs="1" type="xs:boolean" default="false" />
+                          <xs:element name="extra-classpath" minOccurs="0" maxOccurs="1" type="xs:string" />
+                          <xs:element name="instances" minOccurs="0" maxOccurs="1" type="xs:unsignedByte" default="1" />
+                          <xs:element name="worker-pool-name" minOccurs="0" maxOccurs="1" type="xs:string" />
+                          <xs:element name="worker-pool-size" minOccurs="0" maxOccurs="1" type="xs:unsignedByte" default="20" />
+                          <xs:element name="max-worker-execute-time" minOccurs="0" maxOccurs="1" type="xs:unsignedShort" default="60000" />
+                        </xs:sequence>
+                      </xs:complexType>
+                    </xs:element>
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

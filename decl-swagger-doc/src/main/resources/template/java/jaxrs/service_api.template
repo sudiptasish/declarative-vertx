@@ -1,0 +1,159 @@
+package com.example.rest.handler;
+
+import com.example.rest.model.Employee;
+import com.example.rest.model.ItemList;
+import jakarta.inject.Singleton;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.DELETE;
+import jakarta.ws.rs.POST;
+import jakarta.ws.rs.PUT;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.PathParam;
+import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.Consumes;
+import jakarta.ws.rs.core.Context;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.MultivaluedMap;
+import jakarta.ws.rs.core.UriInfo;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.NoSuchElementException;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
+
+/**
+ * Example REST service.
+ *
+ * <p>
+ * This controller class is designed to handle events, such as incoming network requests, database responses, or other
+ * events within your application, allowing you to process data and respond accordingly.
+ *
+ */
+@Singleton
+@Path("/api/v1")
+@Consumes(MediaType.APPLICATION_JSON)
+public class {RESOURCE}Handler {
+    
+    // Counter for auto-incrementing the id.
+    public static final AtomicInteger COUNTER = new AtomicInteger(0);
+    
+    private static final Integer DEFAULT_LIMIT = 10;
+    
+    // In-memory store for storing the elements.
+    // Change it to ConcurrentHashMap for thread-safety.
+    private final Map<String, {RESOURCE}> store = new LinkedHashMap<>();
+
+    @Path("/{LOWER(RESOURCE)}s")
+    @POST
+    @Produces(MediaType.APPLICATION_JSON)
+    public {RESOURCE} create({RESOURCE} element) {
+        try {
+            {org.javalabs.decl.api.cust.PostMethodCustomization.entry(${Project})}
+        }
+        catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @PUT
+    @Path("/{LOWER(RESOURCE)}s/{id}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Map modify(@PathParam("id") String id, {RESOURCE} element) {
+        try {
+            {org.javalabs.decl.api.cust.PutMethodCustomization.entry(${Project})}
+        }
+        catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @GET
+    @Path("/{LOWER(RESOURCE)}s")
+    @Produces(MediaType.APPLICATION_JSON)
+    public ItemList viewAll(@Context UriInfo uriInfo) {
+        Map<String, String> params = new HashMap<>();
+        
+        MultivaluedMap<String, String> queryMap = uriInfo.getQueryParameters();
+        for(String key : queryMap.keySet()){
+            params.put(key, queryMap.getFirst(key));
+        }
+                
+        try {
+            Integer offset = params.containsKey("offset") ? Integer.valueOf(params.get("offset")) : 0;
+            Integer limit = params.containsKey("limit") ? Integer.valueOf(params.get("limit")) : DEFAULT_LIMIT;
+        
+            {org.javalabs.decl.api.cust.GetAllMethodCustomization.entry(${Project})}
+
+            return build(params, store.size(), items, offset, limit);
+        }
+        catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+    
+    @GET
+    @Path("/{LOWER(RESOURCE)}s/{id}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public {RESOURCE} view(@PathParam("id") String id) {
+        try {
+            {org.javalabs.decl.api.cust.GetMethodCustomization.entry(${Project})}
+        }
+        catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @DELETE
+    @Path("/{LOWER(RESOURCE)}s/{id}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public {RESOURCE} remove(@PathParam("id") String id) {
+        try {
+            {org.javalabs.decl.api.cust.DeleteMethodCustomization.entry(${Project})}
+        }
+        catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+    
+    private ItemList build(Map<String, String> params
+            , int total
+            , List<Object> list
+            , int offset
+            , int limit) {
+        
+        // Build the item list.
+        params.remove("offset");
+        params.remove("limit");
+        
+        String path = "/api/v1/{LOWER(RESOURCE)}s";
+        ItemList itemList = new ItemList(total, list, path);
+        
+        itemList.setHasMore(itemList.getTotal() > (offset + limit));
+        
+        String sep = "?";
+        int idx = 0;
+        
+        for (Map.Entry<String, String> me : params.entrySet()) {
+            if (! me.getKey().equals("offset") && ! me.getKey().equals("limit")) {
+                path += sep + me.getKey() + "=" + me.getValue();
+                idx ++;
+
+                if (idx > 0) {
+                    sep = "&";
+                }
+            }
+        }
+        if (itemList.isHasMore()) {
+            itemList.setNextLink(path + sep + "offset=" + (offset + limit) + "&limit=" + limit);
+        }
+        if (offset - limit >= 0) {
+            itemList.setPreviousLink(path + sep + "offset=" + (offset - limit) + "&limit=" + limit);
+        }
+        return itemList;
+    }
+}
+

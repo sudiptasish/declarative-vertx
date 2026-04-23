@@ -1,0 +1,15 @@
+package com.example.rest;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+/**
+ * Main class that will initialize the spring boot server.
+ */
+@SpringBootApplication
+public class ExampleMain {
+    
+    public static void main(String[] args) throws Exception {
+        SpringApplication.run(ExampleMain.class, args);
+    }
+}

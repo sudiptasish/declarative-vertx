@@ -1,0 +1,49 @@
+package {MAIN_PACKAGE};
+
+import org.javalabs.decl.vertx.config.Routematic;
+import org.javalabs.decl.vertx.jaxb.RoutingConfig;
+import org.javalabs.decl.vertx.config.parser.RoutingConfigParser;
+import io.vertx.core.Vertx;
+import io.vertx.core.http.HttpServer;
+import io.vertx.ext.web.Router;
+import io.vertx.ext.web.handler.BodyHandler;
+
+/**
+ * Main class that will initialize the vertx container and start the http server.
+ */
+public class ExampleMain {
+    
+    private HttpServer server = null;
+    
+    public static void main(String[] args) throws Exception {
+        ExampleMain ex = new ExampleMain();
+        ex.run();
+    }
+    
+    public void run() {
+        Vertx vertx = Vertx.vertx();
+        
+        // Initialize the vert.x router.
+        // The router is a core component that receives incoming HTTP requests and directs them to the appropriate handler.
+        Router router = Router.router(vertx);
+        router.route("/*").handler(BodyHandler.create(false).setBodyLimit(1024 * 1024));
+        
+        // Read the routing-config.xml and configure the handler(s).
+        // Dynamic programming, no boiler-plate code.
+        Routematic rmatic = new Routematic();
+        RoutingConfig rc = RoutingConfigParser.parser().read("routing-config.xml");
+        
+        // Add the routing path to the Vert.x router.
+        rmatic.addPath(vertx, router, rc);
+        
+        server = vertx.createHttpServer();
+
+        // In order to handle incoming HTTP requests a request handler must be set
+        // on the HTTP server. This is normally done before starting the server.
+        server.requestHandler(router);
+        server.listen(8080);
+        
+        System.out.println("Started Http Server. Listening to port: " + server.actualPort());
+    }
+}
+

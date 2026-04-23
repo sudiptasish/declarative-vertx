@@ -1,0 +1,641 @@
+<?xml version='1.0' encoding='UTF-8'?>
+
+<!--
+    TODO define vocabulary identification
+    PUBLIC ID: -//vendor//vocabulary//EN
+    SYSTEM ID: http://server/path/server-test.dtd
+
+-->
+
+<!--
+    The server.xml file is a core configuration file for declarative vert.x, dictating how the server behaves
+    during startup and operation. This file defines various elements like the server, services, connectors, 
+    and containers, which handle requests and manage web applications.
+
+    <server-config>
+    ...
+    </server-config>
+-->
+
+<!--- Server configuration -->
+<!ELEMENT server-config (allowed-headers|server-opts|tcp-opts|network-opts|http-opts|allowed-methods|keystore-config|truststore-config|routing-config|context-root|access-log|security-constraint)*>
+
+<!--- Web server configuration parameters -->
+<!ELEMENT server-opts (ssl|host|port|accept-backlog|client-auth|sni|use-proxy-protocol|proxy-protocol-timeout|register-write-handler)*>
+
+<!--- 
+    Set the ssl parameter if you want your server to be started in ssl mode.
+    Along with this you have to use a keystore containing the SSL certificate and private key. 
+    You also need to ensure the server is listening on the HTTPS port.
+-->
+<!ELEMENT ssl (#PCDATA)>
+
+<!--- 
+    The host setting that determines which network interface the server will listen on. 
+    By default, the server listens on all available network interfaces (typically 0.0.0.0), 
+    but you can configure it to listen on a specific host.
+-->
+<!ELEMENT host (#PCDATA)>
+
+<!--- 
+    The port attribute, of type int, specifies the TCP port number that the server will 
+    listen for incoming connections. By default, if not specified, Vert.x will choose the
+    defautl port as 8080.
+-->
+<!ELEMENT port (#PCDATA)>
+
+<!--- 
+    It specifies the maximum number of pending connection requests that the server can queue
+    before refusing new connections. It's essentially a limit on the number of incomplete TCP 
+    connections that the server will allow to accumulate. A higher acceptBacklog allows the 
+    server to handle more concurrent connection attempts, but setting it too high can lead to 
+    resource exhaustion if the server isn't processing connections quickly enough.
+-->
+<!ELEMENT accept-backlog (#PCDATA)>
+
+<!--- 
+    Configures the engine to require/request client authentication. The accepted values are:
+
+    1. NONE - No client authentication is requested or required.
+    2. REQUEST - Accept authentication if presented by client. If this option is set and the client chooses
+    not to provide authentication information about itself, the negotiations will continue.
+    3. REQUIRED - Require client to present authentication, if not presented then negotiations will be declined.
+-->
+<!ELEMENT client-auth (#PCDATA)>
+
+<!--- 
+    The setting for Server Name Indication (SNI).
+    SNI is a TLS extension that allows a client to specify which hostname it is trying to connect 
+    to when using HTTPS. This is crucial for hosting multiple HTTPS sites on the same IP address
+    and port.
+    You can enable or disable SNI support for the HTTP server. When set to true, the server will 
+    attempt to use SNI to determine the correct certificate to present to the client during the 
+    TLS handshake.
+-->
+<!ELEMENT sni (#PCDATA)>
+
+<!--- 
+    To use the proxy protocol with a Vert.x HttpServer, you need to enable it by setting this property. 
+    This allows the server to correctly interpret the PROXY protocol header, which is often used in 
+    proxy setups like HAProxy to pass client connection information to the backend server.
+-->
+<!ELEMENT use-proxy-protocol (#PCDATA)>
+
+<!--- 
+    It specifies the maximum time, in seconds, that the server will wait for a PROXY protocol header
+    from a client before considering the connection timed out. The default value for this timeout is 10 seconds.
+-->
+<!ELEMENT proxy-protocol-timeout (#PCDATA)>
+
+<!--- 
+    This is used to configure whether write handlers for server WebSockets should be registered by default.
+    It doesn't directly relate to HTTP server options for general requests, but rather specifically to
+    WebSocket connections. Setting this option to true will cause a write handler to be registered 
+    automatically for all WebSocket connections created by the server.
+-->
+<!ELEMENT register-write-handler (#PCDATA)>
+
+<!--- TCP Option parameters -->
+<!ELEMENT tcp-opts (tcp-no-delay|tcp-keep-alive|so-linger|idle-timeout|read-idle-timeout|write-idle-timeout|tcp-fast-open|tcp-cork|tcp-quick-ack|tcp-user-timeout|ssl-opts)*>
+
+<!---
+    It controls whether the TCP_NODELAY socket option is enabled for the HTTP server. 
+    When enabled (set to true), it disables the Nagle's algorithm, potentially reducing latency for small 
+    packets at the cost of increased network overhead. When disabled (set to false), the Nagle's algorithm
+    is enabled, potentially improving network efficiency for many small packets. 
+    The default value is false.
+-->
+<!ELEMENT tcp-no-delay (#PCDATA)>
+
+<!--- 
+    This refers to the underlying TCP connection's keep-alive mechanism. It periodically sends probes 
+    to ensure the connection is still active and prevent it from being closed by intermediate 
+    network devices due to inactivity.
+-->
+<!ELEMENT tcp-keep-alive (#PCDATA)>
+
+<!--- 
+    It controls the socket's linger behavior when closing the connection. Specifically, it determines 
+    how long the socket waits to send any remaining unsent data before actually closing the connection.
+-->
+<!ELEMENT so-linger (#PCDATA)>
+
+<!--- 
+    This setting determines how long an HTTP connection can be idle before it's automatically closed.
+    This setting helps prevent resource exhaustion by actively disconnecting connections that are not
+    actively sending or receiving data.
+-->
+<!ELEMENT idle-timeout (#PCDATA)>
+
+<!--- 
+    It determines the maximum time a server socket will remain idle (without receiving any data) before
+    the connection is automatically closed. It's a mechanism to prevent idle connections from consuming
+    resources indefinitely.
+-->
+<!ELEMENT read-idle-timeout (#PCDATA)>
+
+<!--- 
+    It sets the maximum amount of time a connection can remain idle before being closed due to inactivity
+    on the write side. It's a crucial setting for preventing idle connections from consuming resources 
+    indefinitely.
+-->
+<!ELEMENT write-idle-timeout (#PCDATA)>
+
+<!--- 
+    Enable the TCP_FASTOPEN option - only with linux native transport.
+-->
+<!ELEMENT tcp-fast-open (#PCDATA)>
+
+<!--- 
+    This option, when enabled, leverages the TCP_CORK option available in Linux native transports.
+    This option, when set to true, instructs the kernel to delay sending TCP packets until a larger 
+    buffer is filled, or a timeout is reached. This can improve network performance in certain scenarios 
+    by reducing the number of small packets sent.
+-->
+<!ELEMENT tcp-cork (#PCDATA)>
+
+<!--- 
+    It allows the server to send TCP acknowledgments (ACKs) immediately, rather than waiting for 
+    the kernel's delayed ACK timer. This can improve network performance, particularly in scenarios
+    with frequent small packets.
+-->
+<!ELEMENT tcp-quick-ack (#PCDATA)>
+
+<!--- 
+    It controls the maximum time a TCP connection can be idle before being closed by the server. 
+    This is particularly useful for preventing resource exhaustion from inactive connections.
+-->
+<!ELEMENT tcp-user-timeout (#PCDATA)>
+
+<!---
+    SSL Options for tcp
+-->
+<!ELEMENT ssl-opts (ssl-handshake-timeout|key-cert-options|trust-options|enabled-cipher-suites|crl-paths|crl-values|use-alpn|enabled-secure-transport-protocols)*>
+
+<!---
+    It allows you to set a timeout for the SSL/TLS handshake process. This timeout defines how long 
+    the system will wait for a client to complete the handshake before considering it a failure.
+-->
+<!ELEMENT ssl-handshake-timeout (#PCDATA)>
+
+<!---
+    This options are used within SSLOptions to configure the key and certificate information 
+    for SSL/TLS connections. Specifically, KeyCertOptions define how the server or client presents 
+    its identity during the SSL handshake. You'll typically use KeyStoreOptions or PemKeyCertOptions 
+    as implementations of KeyCertOptions to provide the necessary certificate and key data, 
+    usually in a keystore file or PEM format.
+-->
+<!ELEMENT key-cert-options (#PCDATA)>
+
+<!---
+    This options are used to configure how the SSL/TLS layer trusts certificates during a connection. 
+    They specify the source of trusted certificates, which can be a keystore, a set of certificates, 
+    or a trust manager.
+-->
+<!ELEMENT trust-options (#PCDATA)>
+
+<!---
+    This property, when not empty, determines which cipher suites are used for encryption during 
+    the SSL/TLS handshake. It overrides the default cipher suites provided by the SSL engine.
+-->
+<!ELEMENT enabled-cipher-suites (#PCDATA)>
+
+<!---
+    It controls whether or not the Application-Layer Protocol Negotiation (ALPN) extension for 
+    TLS is enabled. ALPN allows the client and server to negotiate which application-level protocol 
+    (like HTTP/2) to use over the secure connection.
+-->
+<!ELEMENT use-alpn (#PCDATA)>
+
+<!---
+    It is used to specify the paths to Certificate Revocation List (CRL) files. These files are 
+    used to verify if a certificate presented by a server or client has been revoked, enhancing 
+    the security of SSL/TLS connections.
+-->
+<!ELEMENT crl-paths (#PCDATA)>
+
+<!---
+    It allows you to add a CRL value (represented as a Buffer) to the SSL options, enabling CRL 
+    checking during SSL/TLS handshakes.
+-->
+<!ELEMENT crl-values (#PCDATA)>
+
+<!---
+    It sets up the ssl transport protocols that are to be enabled for the current vertx server.
+-->
+<!ELEMENT enabled-secure-transport-protocols (#PCDATA)>
+
+
+<!--- Network options for the http server -->
+<!ELEMENT network-opts (send-buffer-size|receive-buffer-size|reuse-address|traffic-class|log-activity|reuse-port)*>
+
+<!--- 
+    It controls the size of the TCP send buffer used by the HTTP server. This buffer is used to 
+    temporarily store data before it's sent over the network. Setting it appropriately can impact 
+    performance, especially under high load or when dealing with large responses.
+-->
+<!ELEMENT send-buffer-size (#PCDATA)>
+
+<!--- 
+    It controls the size of the TCP receive buffer for the server. This buffer is used to store 
+    incoming data before it's processed by the Vert.x HTTP server. Setting a larger buffer size 
+    can potentially improve performance under high load, while a smaller buffer might be more 
+    appropriate for lower traffic scenarios.
+-->
+<!ELEMENT receive-buffer-size (#PCDATA)>
+
+<!--- 
+    It controls whether a socket can be bound to an address that is already in use, allowing multiple 
+    sockets to listen on the same port. When enabled, it allows a new server instance to start even 
+    if a previous server instance on the same address is still in a TIME_WAIT state, which can occur 
+    after a server shuts down.
+-->
+<!ELEMENT reuse-address (#PCDATA)>
+
+<!--- 
+    It allows you to set the traffic class (also known as "service class" or "DiffServ octet") for the 
+    underlying TCP sockets of an HTTP server. This option is related to the IP header's DSCP or ECN fields, 
+    which can be used to prioritize network traffic.
+-->
+<!ELEMENT traffic-class (#PCDATA)>
+
+<!--- 
+    It enables logging of network activity for an HTTP server. When set to true, Netty's pipeline is 
+    configured to log network events at the DEBUG level on Netty's logger. To see these logs, you must
+    also configure your logging framework (e.g., Logback, SLF4J) to enable DEBUG level logging for 
+    io.netty.handler.logging.LoggingHandler.
+-->
+<!ELEMENT log-activity (#PCDATA)>
+
+<!--- 
+    It allows you to enable or disable the reuse of the port for the HTTP server. When reusePort is 
+    set to true, the server will attempt to reuse the port even if it's in a TIME_WAIT state, which 
+    can be useful in certain scenarios like when restarting the server quickly after it was previously 
+    closed.
+-->
+<!ELEMENT reuse-port (#PCDATA)>
+
+<!--- Http option parameters -->
+<!ELEMENT http-opts (per-message-web-socket-compression-supported|max-header-size|compression-supported|compression-level|max-web-socket-frame-size|max-web-socket-message-size|handle-100-continue-automatically|per-frame-web-socket-compression-supported|max-chunk-size|http2-clear-text-enabled|register-web-socket-write-handlers|alpn-versions|http2-rst-flood-window-duration|accept-unmasked-frames|web-socket-preferred-client-no-context|max-initial-line-length|initial-settings|http2-rst-flood-max-rst-frame-per-window|max-form-attribute-size|web-socket-allow-server-no-context|web-socket-closing-timeout|web-socket-compression-level|tracing-policy|http2-connection-window-size|max-form-fields|decompression-supported|max-form-buffered-bytes|decoder-initial-buffer-size)*>
+
+<!--- 
+    This allows the server to compress responses using gzip or deflate when a client indicates support
+    for these methods in the Accept-Encoding header.
+-->
+<!ELEMENT compression-supported (#PCDATA)>
+
+<!--- 
+    This option  controls the level of compression used when the server compresses response bodies. 
+    This setting, ranging from 1 to 9, affects the trade-off between compression ratio and CPU usage. 
+    A higher level (closer to 9) provides better compression but consumes more CPU resources. 
+    The default value is 6, which is a common balance point.
+-->
+<!ELEMENT compression-level (#PCDATA)>
+
+<!--- 
+    It configures the maximum allowable size of a WebSocket frame in bytes. It defaults to 65536 (64KB).
+    You can increase this limit. This setting prevents denial-of-service attacks by limiting the size 
+    of individual WebSocket messages.
+-->
+<!ELEMENT max-web-socket-frame-size (#PCDATA)>
+
+<!--- 
+    It configures the maximum allowable size for a WebSocket message, including fragmented messages. 
+    The default value is 4 times the DEFAULT_MAX_WEBSOCKET_FRAME_SIZE which is 65536, meaning the 
+    default max message size is 262144 bytes (4 * 65536).
+-->
+<!ELEMENT max-web-socket-message-size (#PCDATA)>
+
+<!--- 
+    To enable automatic handling of the "Expect: 100-Continue" header in Vert.x, you need to set this
+    option to true. This tells the Vert.x HTTP server to automatically respond with a "100 Continue"
+    (HTTP 1.1) or "102 Processing" (HTTP/2) status code when a client sends an "Expect: 100-Continue" 
+    header, indicating that it is safe to send the request body.
+-->
+<!ELEMENT handle-100-continue-automatically (#PCDATA)>
+
+<!--- 
+    It limits the maximum size of HTTP chunks received by the server. It's a safety mechanism to prevent 
+    excessively large chunks from overwhelming the server. The default value is 8192 bytes.
+-->
+<!ELEMENT max-chunk-size (#PCDATA)>
+
+<!--- 
+    It sets the maximum allowed length for the initial line of an HTTP request (e.g., 
+    "GET /index.html HTTP/1.1"). This setting helps prevent denial-of-service (DoS) attacks by limiting
+    the size of incoming request lines. The default value is 4096 bytes.
+-->
+<!ELEMENT max-initial-line-length (#PCDATA)>
+
+<!--- 
+    It defines the maximum allowed size in bytes for HTTP headers (including the initial line) when a
+    server receives an HTTP request. Setting this option prevents large or malicious header sizes 
+    from overwhelming the server.
+-->
+<!ELEMENT max-header-size (#PCDATA)>
+
+<!--- 
+    It configures the maximum allowed size for a single attribute in a form submission. It's a 
+    mechanism to prevent excessive memory consumption from overly large form field values. The default 
+    value for maxFormAttributeSize is 8192 bytes. If a form attribute exceeds this limit, the server 
+    will typically respond with an HTTP status code 413 (Request Entity Too Large).
+-->
+<!ELEMENT max-form-attribute-size (#PCDATA)>
+
+<!--- 
+    It allows you to set the maximum number of fields allowed in a form when handling HTTP requests. 
+    This setting is crucial for preventing denial-of-service (DoS) attacks where malicious clients 
+    might send excessively large forms to overwhelm the server. By setting a reasonable limit, 
+    you can mitigate such risks.
+-->
+<!ELEMENT max-form-fields (#PCDATA)>
+
+<!--- 
+    It limits the amount of buffered bytes when decoding a form. This setting prevents excessive 
+    memory consumption by restricting the size of form data the server will buffer during request 
+    processing. The default value is 1024 bytes.
+-->
+<!ELEMENT max-form-buffered-bytes (#PCDATA)>
+
+<!--- The initial settings for an http option. -->
+<!ELEMENT initial-settings (header-table-size|push-enabled|max-concurrent-streams|initial-window-size|max-frame-size|max-header-list-size)*>
+
+<!--- Put your DTDDoc comment here. -->
+<!ELEMENT header-table-size (#PCDATA)>
+
+<!--- 
+    It controls whether the server supports HTTP/2 server push. If enabled, the server can 
+    proactively send resources to the client in anticipation of future requests, potentially 
+    improving performance, especially for static assets.
+-->
+<!ELEMENT push-enabled (#PCDATA)>
+
+<!--- 
+    It sets the limit on the number of concurrent streams an HTTP/2 server allows for a single 
+    connection. This setting is crucial for managing resources and preventing denial-of-service 
+    (DoS) attacks, especially in HTTP/2 where multiplexing is common.
+-->
+<!ELEMENT max-concurrent-streams (#PCDATA)>
+
+<!--- 
+    This Setting controls the initial flow control window size for HTTP/2 connections. This setting, 
+    which is an integer value, determines how much data a server can send before needing to wait
+    for an acknowledgement from the client. Setting it to a larger value can improve throughput, 
+    especially for large responses, while a smaller value can help prevent a slow client from 
+    overwhelming the server. The default value is -1.
+-->
+<!ELEMENT initial-window-size (#PCDATA)>
+
+<!--- 
+    It refers to the maximum allowed size for a single WebSocket frame, not the overall message 
+    size which can be composed of multiple frames. The default max-frame-size for WebSocket frames
+    is 65536 bytes (64KB). If a larger frame is received, a CorruptedFrameException is thrown.
+-->
+<!ELEMENT max-frame-size (#PCDATA)>
+
+<!--- 
+    It configures the maximum allowed size for the combined size of all HTTP headers in a request. 
+    This setting helps prevent denial-of-service attacks by limiting the amount of memory that 
+    can be consumed by a single request.
+-->
+<!ELEMENT max-header-list-size (#PCDATA)>
+
+<!--- 
+    It allows you to configure the ALPN (Application-Layer Protocol Negotiation) versions for an
+    HTTP/2 server. ALPN is a TLS extension that allows the server and client to negotiate which 
+    protocol (e.g., HTTP/1.1, HTTP/2) to use during the initial connection handshake. 
+    The alpnVersions option in HttpServerOptions enables you to specify the supported protocol 
+    versions that the server will advertise to clients.
+-->
+<!ELEMENT alpn-versions EMPTY>
+
+<!--- 
+    To enable HTTP/2 clear-text (h2c) support in Vert.x HttpServerOptions, you need to set this
+    option to true. This allows the server to negotiate HTTP/2 without requiring TLS.
+-->
+<!ELEMENT http2-clear-text-enabled (#PCDATA)>
+
+<!--- 
+    It allows you to configure various settings for an HTTP/2 server, including the connection 
+    window size. The http2ConnectionWindowSize setting controls the initial flow control window 
+    size for an HTTP/2 connection. This setting determines how much data the server can send to 
+    a client before waiting for the client to acknowledge receipt of the data.
+-->
+<!ELEMENT http2-connection-window-size (#PCDATA)>
+
+<!--- 
+    It allows you to enable decompression for incoming requests. The attribute controls whether 
+    the server will automatically decompress request bodies that are compressed using gzip, 
+    deflate, or br (Brotli) encodings. By default, decompression is enabled.
+-->
+<!ELEMENT decompression-supported (#PCDATA)>
+
+<!--- 
+    It allows you to configure whether the server accepts unmasked WebSocket frames. Setting 
+    this attribute to true enables the server to accept WebSocket frames that are not masked 
+    (i.e., have a mask key of all zeros). By default, Vert.x WebSocket servers will reject 
+    unmasked frames, as per RFC 6455, Section 5.1, which mandates masking for client-to-server 
+    frames.
+-->
+<!ELEMENT accept-unmasked-frames (#PCDATA)>
+
+<!--- 
+    It configures the initial size of the buffer used by the HTTP decoder when processing 
+    incoming requests. The default value is 128 bytes, but you can adjust it to potentially 
+    improve performance when dealing with large headers or requests by setting it to a more 
+    appropriate size.
+-->
+<!ELEMENT decoder-initial-buffer-size (#PCDATA)>
+
+<!--- 
+    This allows you to specify whether the server should support per-frame WebSocket compression. 
+    The default value is true.
+-->
+<!ELEMENT per-frame-web-socket-compression-supported (#PCDATA)>
+
+<!--- 
+    It controls whether the server supports per-message WebSocket compression, which is a technique 
+    to reduce the size of messages sent over a WebSocket connection. The default value is true.
+-->
+<!ELEMENT per-message-web-socket-compression-supported (#PCDATA)>
+
+<!--- 
+    It allows you to configure the compression level for WebSocket connections. It's a value 
+    between 1 and 9, where higher values mean more compression but potentially slower performance, 
+    while lower values mean less compression but potentially faster performance. 
+    The default level is 6.
+-->
+<!ELEMENT web-socket-compression-level (#PCDATA)>
+
+<!--- 
+    It is used to configure various aspects of an HTTP server, including WebSocket behavior. 
+    The webSocketServer**NoContextTakeover** option, when set within HttpServerOptions, determines 
+    whether the server will accept the server_no_context_takeover parameter in the per-message 
+    deflate extension offered by the client during WebSocket connections.
+-->
+<!ELEMENT web-socket-preferred-client-no-context (#PCDATA)>
+
+<!--- 
+    It allows you to configure WebSocket behavior, including the handling of server_no_context_takeover 
+    parameter in per-message deflate compression. Setting this attribute to true enables the server
+    to accept this parameter, indicating it won't maintain a context for deflate compression across 
+    messages. This essentially allows for more efficient, albeit potentially less performant in some 
+    cases, WebSocket communication.
+-->
+<!ELEMENT web-socket-allow-server-no-context (#PCDATA)>
+
+<!--- 
+    It is used to configure how long the server waits for a WebSocket to close after receiving a 
+    close frame from the client. Specifically, it sets the duration for the server to wait before 
+    forcibly closing the underlying TCP connection. A value of 0 will close the connection immediately, 
+    while a negative value disables the timeout.
+-->
+<!ELEMENT web-socket-closing-timeout (#PCDATA)>
+
+<!--- 
+    It includes a tracingPolicy setting to control how tracing is handled for HTTP requests. 
+    The TracingPolicy enum has three options:
+    1. ALWAYS - Creates a new trace or reuses an existing one. (default)
+    2. IGNORE - Disables tracing for that server.
+    3. PROPAGATE - propagates an existing trace if one is present
+-->
+<!ELEMENT tracing-policy (#PCDATA)>
+
+<!--- 
+    It controls whether write handlers for server WebSockets are registered by default. 
+    When set to true, the server will register handlers that allow writing data to the 
+    WebSocket connection. When set to false (the default), no write handlers are registered, 
+    and you'll need to explicitly register them to send data to the WebSocket.
+-->
+<!ELEMENT register-web-socket-write-handlers (#PCDATA)>
+
+<!--- 
+    Set the max number of RST frame allowed per time window, this is used to prevent HTTP/2 RST 
+    frame flood DDOS attacks.
+-->
+<!ELEMENT http2-rst-flood-max-rst-frame-per-window (#PCDATA)>
+
+<!--- 
+    It defines the duration of the time window used for detecting and mitigating HTTP/2 RST 
+    frame floods. This setting, along with http2MaxRstFramePerWindow, helps prevent 
+    denial-of-service attacks that exploit the sending of excessive RST_STREAM frames. 
+    The default value is 30 seconds.
+-->
+<!ELEMENT http2-rst-flood-window-duration (#PCDATA)>
+
+<!ELEMENT cross-origin (allowed-headers|allowed-methods)*>
+
+<!--- 
+    List of headers that are allowed by this Vert.x http server.
+-->
+<!ELEMENT allowed-headers (allowed-header)*>
+
+<!--- Put your DTDDoc comment here. -->
+<!ELEMENT allowed-header (#PCDATA)>
+
+<!--- 
+    List of http methods that are suported by this Vert.x http server.
+-->
+<!ELEMENT allowed-methods (allowed-method)*>
+
+<!--- Put your DTDDoc comment here. -->
+<!ELEMENT allowed-method (#PCDATA)>
+
+<!--- 
+    Key or trust store options configuring private key and/or certificates based on KeyStore.
+    When used as a key store, it should point to a store containing a private key and its certificate.
+-->
+<!ELEMENT keystore-config (store-name|store-password)*>
+
+<!--- 
+    Name of the key store. A file with that name must exist in in the classpath.
+    The prefer type is PKCS.
+-->
+<!ELEMENT store-name EMPTY>
+
+<!--- 
+    Password to read the key store file.
+-->
+<!ELEMENT store-password EMPTY>
+
+<!--- 
+    Key or trust store options configuring private key and/or certificates based on KeyStore.
+    When used as a trust store, it should point to a store containing a list of trusted certificates.
+-->
+<!ELEMENT truststore-config (store-name|store-password)*>
+
+<!--- 
+    Name of the trust store. A file with that name must exist in in the classpath.
+    The prefer type is PKCS.
+-->
+<!ELEMENT store-name EMPTY>
+
+<!--- 
+    Password to read the trust store file.
+-->
+<!ELEMENT store-password EMPTY>
+
+<!--- 
+    A path prefix in a URL that identifies a specific web application deployed on a server.
+    It's essentially the "folder" or "namespace" within the server where your application's 
+    resources reside.
+-->
+<!ELEMENT context-root (#PCDATA)>
+
+<!--- 
+    It records all requests processed by an HTTP server. These logs contain valuable information
+    such as timestamps, IP addresses, requested URLs, and response codes, which can be used for
+    troubleshooting, security monitoring, and analyzing website usage patterns.
+-->
+<!ELEMENT access-log (log-format|route)*>
+
+<!--- 
+    The access log format.
+    Must be a sub-class of "io.vertx.ext.web.handler.LoggerFormatter".
+-->
+<!ELEMENT log-format (#PCDATA)>
+
+<!--- 
+    Define the comma separated path(s) for which access log will be enabled.
+-->
+<!ELEMENT route (#PCDATA)>
+
+<!--- 
+    A security constraint is used to define the access privileges to a collection of 
+    resources using their URL mapping.
+-->
+<!ELEMENT security-constraint (auth-handler|auth-constraint)*>
+
+<!--- The custom authorization handler -->
+<!ELEMENT auth-handler EMPTY>
+
+<!--- 
+    Specifies whether authentication is to be used and names the roles authorized to perform 
+    the constrained requests.
+-->
+<!ELEMENT auth-constraint (auth-type|url-patterns)*>
+
+<!--- 
+    Custom auth type.
+    NO_AUTH is a special type of auth that indicates that authorization will be disabled for
+    certain set of urls as specified in the "url-patterns* section.
+-->
+<!ELEMENT auth-type (#PCDATA)>
+
+<!--- 
+    The url patterns.
+-->
+<!ELEMENT url-patterns (url-pattern)*>
+
+<!--- Add multiple urls. -->
+<!ELEMENT url-pattern (#PCDATA)>
+
+<!--- 
+    In Vert.x Web, a route defines a path and associated handler(s) for processing HTTP requests. 
+    Routers manage these routes, directing requests to the appropriate handler based on criteria 
+    like the HTTP method (GET, POST, etc.), path, or regular expression. Failure handlers are used
+    to deal with errors during request processing
+    This section contains the file that holds all the routing path and their corresponding handlers.
+    The presence of this file is mandatory.
+-->
+<!ELEMENT routing-config (#PCDATA)>

@@ -1,0 +1,37 @@
+package org.javalabs.decl.compile;
+
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URI;
+import javax.tools.JavaFileObject;
+import javax.tools.SimpleJavaFileObject;
+
+/**
+ *
+ * @author schan280
+ */
+public class JavaSource extends SimpleJavaFileObject {
+    
+    private final String content;
+
+    public JavaSource(String javaFile, String content) {
+        // Creates a URI representing the virtual file path
+        super(URI.create("string:///" + javaFile), JavaFileObject.Kind.SOURCE);
+        this.content = content;
+    }
+
+    @Override
+    public CharSequence getCharContent(boolean ignoreEncodingErrors) {
+        // This method will be automatically called at the initial stage by the JavaCompiler.
+        // Typically, at the time of parsing the source file content. 
+        // JavaCompiler.parseFile -> JavaCompiler.parse -> JavaCompiler.readSource
+        return content;
+    }
+
+    @Override
+    public InputStream openInputStream() throws IOException {
+        InputStream in = new ByteArrayInputStream(content.getBytes());
+        return in;
+    }
+}

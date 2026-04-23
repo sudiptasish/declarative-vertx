@@ -1,0 +1,77 @@
+<vertx-web>
+    
+    <context-listener></context-listener>
+    
+    <context-params>
+        <event-loop-pool-size>3</event-loop-pool-size>
+        <worker-pool-size>14</worker-pool-size>
+        <blocked-thread-check-interval>1000</blocked-thread-check-interval>
+        <max-event-loop-execute-time>2000</max-event-loop-execute-time>
+        <max-worker-execute-time>60000</max-worker-execute-time>
+        <internal-blocking-pool-size>24</internal-blocking-pool-size>
+        <cluster-manager></cluster-manager>
+        <ha-enabled>true</ha-enabled>
+        <quorum-size>3</quorum-size>
+        <ha-group>TestHAGroup</ha-group>
+        <file-system-options>
+            <class-path-resolving-enabled>true</class-path-resolving-enabled>
+            <file-caching-enabled>true</file-caching-enabled>
+            <file-cache-dir>system(java.io.tmpdir)</file-cache-dir>
+        </file-system-options>
+        <metrics-options>
+            <enabled>false</enabled>
+            <factory></factory>
+        </metrics-options>
+        <warning-exception-time>5000</warning-exception-time>
+        <prefer-native-transport>false</prefer-native-transport>
+        <disable-tccl>false</disable-tccl>
+        <use-daemon-thread>false</use-daemon-thread>
+        <event-bus-options>
+            <cluster-public-host></cluster-public-host>
+            <cluster-public-port>0</cluster-public-port>
+            <cluster-ping-interval>20000</cluster-ping-interval>
+            <cluster-ping-reply-interval>20000</cluster-ping-reply-interval>
+            <accept-backlog>-1</accept-backlog>
+            <reconnect-interval>1000</reconnect-interval>
+            <reconnect-attempts>1</reconnect-attempts>
+            <connect-timeout>60000</connect-timeout>
+            <trust-all>true</trust-all>
+            <log-activity>false</log-activity>
+        </event-bus-options>
+        <address-resolver-options>
+            <search-domains></search-domains>
+        </address-resolver-options>
+        <error-handler>com.test.TestErrorHandler</error-handler>
+        <metric-class>io.vertx.ext.dropwizard.DropwizardMetricsOptions</metric-class>
+    </context-params>
+    
+    <verticles>
+        <verticle>
+            <name>app.http.server</name>
+            <class>org.javalabs.decl.vertx.HttpServer</class>
+            <config>conf/server.xml</config>
+            
+            <deploy-options>
+                <worker>false</worker>
+                <threading-model></threading-model>
+                <isolation-group></isolation-group>
+                <ha>true</ha>
+                <extra-classpath></extra-classpath>
+                <instances>3</instances>
+                <worker-pool-name></worker-pool-name>
+                <worker-pool-size></worker-pool-size>
+                <max-worker-execute-time></max-worker-execute-time>
+            </deploy-options>
+        </verticle>
+        <verticle>
+            <name>ecm.processor</name>
+            <class>org.javalabs.core.AppProcessor</class>
+            <deploy-options>
+                <worker>true</worker>
+                <ha>false</ha>
+                <instances>1</instances>
+            </deploy-options>
+        </verticle>
+    </verticles>
+    
+</vertx-web>

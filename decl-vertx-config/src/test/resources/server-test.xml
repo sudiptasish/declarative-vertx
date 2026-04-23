@@ -1,0 +1,172 @@
+<!-- 
+################################################################################
+#                                                                              #
+#                       Http server configuration                              #
+#                                                                              #
+################################################################################     
+-->
+
+<server-config>
+    <server-opts>
+        <ssl>true</ssl>
+        <host>0.0.0.0</host>
+        <port>8999</port>
+        <accept-backlog>5</accept-backlog>
+        <client-auth>NONE</client-auth>
+        <sni>false</sni>
+        <use-proxy-protocol>false</use-proxy-protocol>
+        <proxy-protocol-timeout>20000</proxy-protocol-timeout>
+        <register-write-handler>true</register-write-handler>
+    </server-opts>
+    
+    <tcp-opts>
+        <tcp-no-delay>true</tcp-no-delay>
+        <tcp-keep-alive>true</tcp-keep-alive>
+        <so-linger>90</so-linger>
+        <idle-timeout>80000</idle-timeout>
+        <read-idle-timeout>70000</read-idle-timeout>
+        <write-idle-timeout>60000</write-idle-timeout>
+        <tcp-fast-open>false</tcp-fast-open>
+        <tcp-cork>false</tcp-cork>
+        <tcp-quick-ack>true</tcp-quick-ack>
+        <tcp-user-timeout>60000</tcp-user-timeout>
+        <ssl-opts>
+            <ssl-handshake-timeout>1</ssl-handshake-timeout>
+            <key-cert-options></key-cert-options>
+            <trust-options></trust-options>
+            <enabled-cipher-suites>CSG256B</enabled-cipher-suites>
+            <crl-paths></crl-paths>
+            <crl-values></crl-values>
+            <use-alpn>true</use-alpn>
+            <enabled-secure-transport-protocols>Tlsv1.1,Tlsv1.4</enabled-secure-transport-protocols>
+        </ssl-opts>
+    </tcp-opts>
+    
+    <network-opts>
+        <send-buffer-size>16777216</send-buffer-size>
+        <receive-buffer-size>16777216</receive-buffer-size>
+        <reuse-address>true</reuse-address>
+        <traffic-class>-1</traffic-class>
+        <log-activity>false</log-activity>
+        <reuse-port>false</reuse-port>
+    </network-opts>
+    
+    <http-opts>
+        <compression-supported>false</compression-supported>
+        <compression-level>32</compression-level>
+        <max-web-socket-frame-size>655361</max-web-socket-frame-size>
+        <max-web-socket-message-size>2621441</max-web-socket-message-size>
+        <handle-100-continue-automatically>true</handle-100-continue-automatically>
+        <max-chunk-size>81925</max-chunk-size>
+        <max-initial-line-length>40965</max-initial-line-length>
+        <max-header-size>81925</max-header-size>
+        <max-form-attribute-size>81925</max-form-attribute-size>
+        <max-form-fields>2565</max-form-fields>
+        <max-form-buffered-bytes>10245</max-form-buffered-bytes>
+        <initial-settings>
+            <header-table-size>4096</header-table-size>
+            <push-enabled>true</push-enabled>
+            <max-concurrent-streams>4294967295</max-concurrent-streams>
+            <initial-window-size>65535</initial-window-size>
+            <max-frame-size>16384</max-frame-size>
+            <max-header-list-size>8192</max-header-list-size>
+        </initial-settings>
+        <alpn-versions></alpn-versions>
+        <http2-clear-text-enabled>true</http2-clear-text-enabled>
+        <http2-connection-window-size>57</http2-connection-window-size>
+        <decompression-supported>true</decompression-supported>
+        <accept-unmasked-frames>false</accept-unmasked-frames>
+        <decoder-initial-buffer-size>128</decoder-initial-buffer-size>
+        <per-frame-web-socket-compression-supported>true</per-frame-web-socket-compression-supported>
+        <per-message-web-socket-compression-supported>true</per-message-web-socket-compression-supported>
+        <web-socket-compression-level>16</web-socket-compression-level>
+        <web-socket-preferred-client-no-context>false</web-socket-preferred-client-no-context>
+        <web-socket-allow-server-no-context>false</web-socket-allow-server-no-context>
+        <web-socket-closing-timeout>10006</web-socket-closing-timeout>
+        <tracing-policy>NONE</tracing-policy>
+        <register-web-socket-write-handlers>false</register-web-socket-write-handlers>
+        <http2-rst-flood-max-rst-frame-per-window>300</http2-rst-flood-max-rst-frame-per-window>
+        <http2-rst-flood-window-duration>50001</http2-rst-flood-window-duration>
+    </http-opts>
+    
+    <!-- Set of http headers allowed by this server -->
+    <cross-origin>
+        <allowed-headers>
+            <allowed-header>X-Requested-With</allowed-header>
+            <allowed-header>Access-Control-Allow-Origin</allowed-header>
+            <allowed-header>Access-Control-Allow-Headers</allowed-header>
+            <allowed-header>Content-Type</allowed-header>
+            <allowed-header>Accept</allowed-header>
+            <allowed-header>Cache-Control</allowed-header>
+            <allowed-header>User-Agent</allowed-header>
+            <allowed-header>Keep-Alive</allowed-header>
+            <allowed-header>Authorization</allowed-header>
+            <allowed-header>X-Auth-Token</allowed-header>
+            <allowed-header>X-Consul-Token</allowed-header>
+            <allowed-header>X-Config-Token</allowed-header>
+            <allowed-header>X-Ecm-PrcGroup</allowed-header>
+            <allowed-header>X-Ecm-Prc-Group</allowed-header>
+        </allowed-headers>
+
+        <!-- Set of http methods allowed by this server -->
+        <allowed-methods>
+            <allowed-method>HEAD</allowed-method>
+            <allowed-method>OPTIONS</allowed-method>
+            <allowed-method>GET</allowed-method>
+            <allowed-method>POST</allowed-method>
+            <allowed-method>PUT</allowed-method>
+            <allowed-method>PATCH</allowed-method>
+            <allowed-method>DELETE</allowed-method>
+        </allowed-methods>
+    </cross-origin>
+
+    <!-- Provide the store name only if you are running in a secured mode -->
+    <!--
+        Store name should be the file name (in jks or pkcs format). This store will
+        contain the required server key.
+    -->
+    <keystore-config>
+        <store-name></store-name>
+        <store-password></store-password>
+    </keystore-config>
+
+    <!--
+        Any custom 3rd party certificate used by this server will be stored in the truststore.
+        You can, however, use the java's default truststore to maintain the certificates.
+    -->
+    <truststore-config>
+        <store-name></store-name>
+        <store-password></store-password>
+    </truststore-config>
+    
+    <context-root>/api/v1</context-root>
+    
+    <access-log>
+        <log-format>com.test.TestLoggerFormatter</log-format>
+        <route>{CTX_ROOT}, /v1/kv</route>
+    </access-log>
+    
+    <security-constraint>
+        <!-- Custom auth handler 
+             Must be a subclass of org.javalabs.decl.vertx.container.handler.AuthZHandler.
+        -->
+        <auth-handler></auth-handler>
+        
+        <!-- 
+            NO_AUTH is a special tag, which indicates no authentication will be
+            performed for the below set of url pattern(s).
+        -->
+        <auth-constraint>
+            <auth-type>NO_AUTH</auth-type>
+            <url-patterns>
+                <!-- Adding CTX_ROOT will prepend the value from the context-root tag -->
+                <url-pattern>{CTX_ROOT}/mgmt/</url-pattern>
+                <url-pattern>{CTX_ROOT}/store/config/</url-pattern>
+                <url-pattern>/v1/kv/</url-pattern>
+            </url-patterns>
+        </auth-constraint>
+    </security-constraint>
+    
+    <!-- The vert.x routing configuration file for the http server -->
+    <routing-config>conf/routing-config.xml</routing-config>
+</server-config>

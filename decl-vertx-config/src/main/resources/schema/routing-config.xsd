@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Created with Liquid Technologies Online Tools 1.0 (https://www.liquid-technologies.com) -->
+<xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="routing-config">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="package">
+          <xs:complexType>
+            <xs:attribute name="name" type="xs:string" use="required" />
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="api">
+          <xs:complexType>
+            <xs:attribute name="version" type="xs:decimal" use="required" />
+            <xs:attribute name="basePath" type="xs:string" use="required" />
+            <xs:attribute name="produce" type="xs:string" use="required" />
+            <xs:attribute name="consume" type="xs:string" use="required" />
+          </xs:complexType>
+        </xs:element>
+        <xs:element maxOccurs="unbounded" name="resource-mapping">
+          <xs:complexType>
+            <xs:sequence minOccurs="0">
+              <xs:element maxOccurs="unbounded" name="mapping">
+                <xs:complexType>
+                  <xs:attribute name="uri" type="xs:string" use="required" />
+                  <xs:attribute name="method" type="xs:string" use="required" />
+                  <xs:attribute name="api" type="xs:string" use="required" />
+                  <xs:attribute name="consume" type="xs:string" use="optional" />
+                  <xs:attribute name="produce" type="xs:string" use="optional" />
+                  <xs:attribute name="produces" type="xs:string" use="optional" />
+                  <xs:attribute name="schema" type="xs:string" use="optional" />
+                  <xs:attribute name="admin" type="xs:boolean" use="optional" />
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+            <xs:attribute name="name" type="xs:string" use="required" />
+            <xs:attribute name="path" type="xs:string" use="required" />
+            <xs:attribute name="failure" type="xs:boolean" use="optional" />
+            <xs:attribute name="resource" type="xs:string" use="required" />
+            <xs:attribute name="schema" type="xs:string" use="optional" />
+            <xs:attribute name="provider" type="xs:boolean" use="optional" />
+            <xs:attribute name="accessor" type="xs:string" use="optional" />
+            <xs:attribute name="construct" type="xs:string" use="optional" />
+            <xs:attribute name="arg" type="xs:string" use="optional" />
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

@@ -1,0 +1,65 @@
+<vertx-web>
+    
+    <context-params>
+        <event-loop-pool-size/>
+        <worker-pool-size/>
+        <blocked-thread-check-interval/>
+        <max-event-loop-execute-time/>
+        <max-worker-execute-time/>
+        <internal-blocking-pool-size/>
+        <cluster-manager/>
+        <ha-enabled/>
+        <quorum-size/>
+        <ha-group/>
+        <file-system-options>
+            <class-path-resolving-enabled/>
+            <file-caching-enabled/>
+            <file-cache-dir/>
+        </file-system-options>
+        <metrics-options>
+            <enabled/>
+            <factory/>
+        </metrics-options>
+        <warning-exception-time/>
+        <prefer-native-transport/>
+        <disable-tccl/>
+        <use-daemon-thread/>
+        <event-bus-options>
+            <cluster-public-host/>
+            <cluster-public-port/>
+            <cluster-ping-interval/>
+            <cluster-ping-reply-interval/>
+            <accept-backlog/>
+            <reconnect-interval/>
+            <reconnect-attempts/>
+            <connect-timeout/>
+            <trust-all/>
+            <log-activity/>
+        </event-bus-options>
+        <address-resolver-options>
+            <search-domains/>
+        </address-resolver-options>
+        <error-handler/>
+        <metric-class>io.vertx.ext.dropwizard.DropwizardMetricsOptions</metric-class>
+    </context-params>
+    
+    <verticles>
+        <verticle>
+            <name>app.http.server</name>
+            <class>org.javalabs.decl.vertx.HttpServer</class>
+            <config/>
+            <deploy-options>
+                <worker/>
+                <threading-model/>
+                <isolation-group/>
+                <ha/>
+                <extra-classpath/>
+                <instances/>
+                <worker-pool-name/>
+                <worker-pool-size/>
+                <max-worker-execute-time/>
+            </deploy-options>
+        </verticle>
+    </verticles>
+    
+</vertx-web>

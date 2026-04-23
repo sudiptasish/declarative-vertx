@@ -1,0 +1,106 @@
+package com.example.rest;
+
+import org.javalabs.decl.vertx.config.Routematic;
+import org.javalabs.decl.vertx.jaxb.RoutingConfig;
+import org.javalabs.decl.vertx.config.parser.RoutingConfigParser;
+import io.vertx.core.AbstractVerticle;
+import io.vertx.core.Verticle;
+import io.vertx.core.Vertx;
+import io.vertx.core.http.HttpServer;
+import io.vertx.core.http.HttpServerOptions;
+import io.vertx.ext.web.Router;
+import io.vertx.ext.web.handler.BodyHandler;
+
+/**
+ * An http server verticle.
+ *
+ * <p>
+ * {@link Verticle} in the world of {@link Vertx} is a self-contained unit of code within the Vert.x framework
+ * that can be independently deployed and acts as a lightweight, asynchronous processing unit, essentially 
+ * representing a modular piece of functionality within a reactive application.
+ * 
+ * <p>
+ * Although use of verticles with Vert.x is entirely optional, however, a sample verticle is included to
+ * illustrate the functionalities of Vert.x
+ * 
+ */
+public class HttpServerVerticle extends AbstractVerticle {
+    
+    private static final String ROUTING_CONFIG = "routing-config.xml";
+    
+    // Default Port this http server will be listening to.
+    // You can always override it by passing the system parameter "http.port". Example: -Dhttp.port=7001
+    protected static final int DEFAULT_PORT = 8080;
+    
+    // Maximum payload allowed.
+    // Feel free to modify it post testing phase.
+    protected static final int DEFAULT_PAYLOAD_SIZE = 10 * 1024 * 1024;      // 10 MB
+    
+    // Internal Vert.x Http Server.
+    private HttpServer server = null;
+    
+    // Parse class to load and parse the routing-config.xml
+    private final RoutingConfigParser parser;
+    private final Routematic rmatic;
+    
+    public HttpServerVerticle() {
+        this.parser = RoutingConfigParser.parser();
+        this.rmatic = new Routematic();
+    }
+
+    @Override
+    public void start() throws Exception {
+        // Initialize the vert.x router.
+        // The router is a core component that receives incoming HTTP requests and directs
+        // them to the appropriate handler.
+        Router router = initRouter(vertx);
+        
+        // Read the routing-config.xml and configure the handler(s).
+        RoutingConfig rc = parser.read(ROUTING_CONFIG);
+        
+        // Add the routing path to the Vert.x router.
+        rmatic.addPath(vertx, router, rc);
+        
+        HttpServerOptions options = new HttpServerOptions()
+                .setLogActivity(Boolean.TRUE)
+                .setSsl(Boolean.FALSE)
+                .setCompressionSupported(Boolean.TRUE);
+        
+        server = vertx.createHttpServer(options);
+
+        // In order to handle incoming HTTP requests a request handler must be set
+        // on the HTTP server. This is normally done before starting the server.
+        server.requestHandler(router);
+        
+        // Once the HTTP server is created, it can be started using its listen() method.
+        Integer port = Integer.valueOf(System.getProperty("http.port", "8080"));
+        server.listen(port);
+        
+        System.out.println("Started Http Server. Listening to port: " + server.actualPort());
+    }
+    
+    /**
+     * Initialize the router for http server.
+     * 
+     * <p>
+     * In Vert.x, a router is a core component that receives incoming HTTP requests and directs them to the
+     * appropriate handler based on the request path and method, essentially acting as a central hub for
+     * routing different parts of an application based on the incoming request details.
+     * It is responsible for matching incoming requests to specific routes and executing the corresponding
+     * handler code for each route.
+     * 
+     * @return Router   The Vert.x Router.
+     */
+    private Router initRouter(Vertx vertx) {
+        // Create a Router object.
+        // The router is the cornerstone of Vert.x Web.
+        // This object is responsible for dispatching the HTTP requests to the right handler.
+        Router router = Router.router(vertx);
+        
+        // Disable file-upload.
+        router.route("/*").handler(BodyHandler.create(false).setBodyLimit(DEFAULT_PAYLOAD_SIZE));
+        
+        return router;
+    }
+}
+

@@ -1,0 +1,17 @@
+<!-- 
+################################################################################
+#                                                                              #
+#                       Http server configuration                              #
+#                                                                              #
+################################################################################     
+-->
+
+<server-config>
+    
+    <server-opts/>
+    
+    <context-root>/api/v1</context-root>
+    
+    <routing-config></routing-config>
+    
+</server-config>
