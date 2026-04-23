@@ -35,19 +35,19 @@
     </entity>
 
     <entity class="org.datanucleus.samples.jpa.tutorial.Book" name="Book">
-        <table name="ecm_metadata"/>
+        <table name="books"/>
         <attributes>
-            <id name="metadataId" type="java.lang.String">
+            <id name="bookId" type="java.lang.String">
                 <column name="metadata_id" length="32"></column>
             </id>
-            <id name="endDate" type="java.sq.Timestamp">
-                <column name="end_date"></column>
+            <id name="publishDate" type="java.sq.Timestamp">
+                <column name="publish_date"></column>
             </id>
             <basic name="repoName" type="java.lang.String">
                 <column name="repoName" length="256" nullable="false" insertable="true" updatable="false"/>
             </basic>
-            <basic name="onboardDate" type="java.sq.Timestamp">
-                <column name="onboard_date" nullable="false" insertable="true" updatable="true"/>
+            <basic name="writeDate" type="java.sq.Timestamp">
+                <column name="write_date" nullable="false" insertable="true" updatable="true"/>
             </basic>
         </attributes>
     </entity>

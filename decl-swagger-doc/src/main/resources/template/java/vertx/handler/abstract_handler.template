@@ -45,7 +45,7 @@ public abstract class AbstractHandler {
     }
     
     /**
-     * Create and return the ecm user.
+     * Create and return the application user.
      * 
      * @param ctx
      * @return EcmUser

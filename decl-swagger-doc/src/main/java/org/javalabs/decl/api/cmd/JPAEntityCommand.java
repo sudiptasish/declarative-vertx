@@ -49,13 +49,13 @@ public class JPAEntityCommand implements Command {
             params.put("jpa-lite.entity.package", project.modelPkg());
             params.put("javax.persistence.jdbc.host", "localhost");
             params.put("javax.persistence.jdbc.port", "5432");
-            params.put("javax.persistence.jdbc.db", "ecmdb");
+            params.put("javax.persistence.jdbc.db", "testdb");
             params.put("javax.persistence.jdbc.schema", "public");
-            params.put("javax.persistence.jdbc.user", "ecm");
-            params.put("javax.persistence.jdbc.password", "p@$$word");
+            params.put("javax.persistence.jdbc.user", "test");
+            params.put("javax.persistence.jdbc.password", "test123");
             
-            // params.put("sample.table.name", "ecm_");
-            params.put("exclude.entity.name.prefix", "ecm_");
+            // params.put("sample.table.name", "fk_");
+            params.put("exclude.entity.name.prefix", "fk_");
             params.put("verbose.log", "N");
             
             String ormXml = EntityGenerator.extract(projectRoot.getAbsolutePath(), params);

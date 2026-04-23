@@ -53,7 +53,7 @@ public class JavaClassTest {
     
     @Test
     public void testClassGenWithAnnotation() throws ClassNotFoundException {
-        JavaClass jClass = new JavaClass("ConfigMetadata");
+        JavaClass jClass = new JavaClass("Employee");
         jClass.addParentInterface(Serializable.class);
         jClass.addParentInterface(Cloneable.class);
         jClass.comment(new JavaComment(jClass).comment("This class is auto generated with jpa-lite.").author("schan280"));
@@ -67,7 +67,7 @@ public class JavaClassTest {
         anns.add(new JavaAnnotation(jClass).typeName("jakarta.persistence.Entity"));
         anns.add(new JavaAnnotation(jClass)
                 .typeName("jakarta.persistence.Table")
-                .props(new LinkedHashMap<>() {{ put("name", "ecm_metadata"); }}));
+                .props(new LinkedHashMap<>() {{ put("name", "employees"); }}));
         
         anns.add(new JavaAnnotation(jClass)
                 .typeName("jakarta.persistence.IdClass")
@@ -77,10 +77,10 @@ public class JavaClassTest {
         nqAnns.children(
                 new JavaAnnotation(jClass)
                         .typeName("jakarta.persistence.NamedNativeQuery")
-                        .props(new LinkedHashMap<>() {{ put("name", "ConfigMetadata.selectAll"); put("query", "SELECT * FROM ecm_metadata"); }})
+                        .props(new LinkedHashMap<>() {{ put("name", "Employee.selectAll"); put("query", "SELECT * FROM employees"); }})
                 , new JavaAnnotation(jClass)
                         .typeName("jakarta.persistence.NamedNativeQuery")
-                        .props(new LinkedHashMap<>() {{ put("name", "ConfigMetadata.selectByProjectAndRepo"); put("query", "SELECT * FROM ecm_metadata WHERE project = ? AND repo = ?"); }}));
+                        .props(new LinkedHashMap<>() {{ put("name", "Employee.selectByNameAndLocation"); put("query", "SELECT * FROM employees WHERE name = ? AND location = ?"); }}));
         
         anns.add(nqAnns);
         
@@ -100,23 +100,23 @@ public class JavaClassTest {
         
         jClass.addVar(new JavaVariable(jClass)
                 .type(Integer.class)
-                .name("metadataId")
+                .name("employeeId")
                 .annotations(Arrays.asList(
                         new JavaAnnotation(jClass).typeName("jakarta.persistence.Id")
                         , new JavaAnnotation(jClass).typeName("jakarta.persistence.GeneratedValue").props(new LinkedHashMap<>() {{ put("strategy", ev); }})
                         , new JavaAnnotation(jClass)
                                 .typeName("jakarta.persistence.Column")
                                 .props(new LinkedHashMap<>() {{
-                                    put("name", "metadata_id"); }}))));
+                                    put("name", "employee_id"); }}))));
         
         jClass.addVar(new JavaVariable(jClass)
                 .type(String.class)
-                .name("project")
+                .name("location")
                 .annotations(Arrays.asList(
                         new JavaAnnotation(jClass)
                                 .typeName("jakarta.persistence.Column")
                                 .props(new LinkedHashMap<>() {{
-                                    put("name", "project"); 
+                                    put("name", "location"); 
                                     put("length", "128"); 
                                     put("nullable", Boolean.FALSE); 
                                     put("updatable", Boolean.FALSE);
@@ -124,12 +124,12 @@ public class JavaClassTest {
         
         jClass.addVar(new JavaVariable(jClass)
                 .type(Class.forName("[Ljava.lang.String;"))
-                .name("repo")
+                .name("address")
                 .annotations(Arrays.asList(
                         new JavaAnnotation(jClass)
                                 .typeName("jakarta.persistence.Column")
                                 .props(new LinkedHashMap<>() {{
-                                    put("name", "repo");
+                                    put("name", "address");
                                     put("length", "256"); 
                                     put("nullable", Boolean.FALSE); 
                                     put("updatable", Boolean.FALSE);
@@ -150,11 +150,11 @@ public class JavaClassTest {
         
         jClass.addVar(new JavaVariable(jClass)
                 .type(Timestamp.class)
-                .name("onboardDate")
+                .name("joinedDate")
                 .annotations(Arrays.asList(
                         new JavaAnnotation(jClass)
                                 .typeName("jakarta.persistence.Column")
-                                .props(new LinkedHashMap<>() {{ put("name", "onboard_date"); }}))));
+                                .props(new LinkedHashMap<>() {{ put("name", "joined_date"); }}))));
         
         jClass.addVar(new JavaVariable(jClass)
                 .type(Timestamp.class)
@@ -168,11 +168,11 @@ public class JavaClassTest {
         
         jClass.autoGenMethod(Boolean.TRUE);
         
-        JavaClass inner = new JavaClass("ConfigMetadataPK");
+        JavaClass inner = new JavaClass("EmployeePK");
         jClass.inner(inner);
         
         inner.autoGenConstructor(Boolean.TRUE, JavaClass.CONSTRUCTOR_BOTH);
-        inner.addVar(new JavaVariable(inner).type(Integer.class).name("metadataId"));
+        inner.addVar(new JavaVariable(inner).type(Integer.class).name("employeeId"));
         inner.addVar(new JavaVariable(inner).type(Timestamp.class).name("endDate"));
         inner.autoGenMethod(Boolean.TRUE);
         inner.autoGenHashCode(Boolean.TRUE);

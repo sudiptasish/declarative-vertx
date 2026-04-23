@@ -29,11 +29,11 @@ public class ORMTest {
             EntityType entity = new EntityType();
 
             TableType table = new TableType();
-            table.setName("ecm_metadata_hist");
+            table.setName("employee_hist");
             
             NamedNativeQueryType nnQuery = new NamedNativeQueryType();
-            nnQuery.setName("ConfigMetadata.selectAll");
-            nnQuery.setQuery("SELECT * FROM ecm_metadata_hist");
+            nnQuery.setName("Employee.selectAll");
+            nnQuery.setQuery("SELECT * FROM employee_hist");
 
             NamedNativeQueriesType nnQueries = new NamedNativeQueriesType();
             nnQueries.getNamedNativeQuery().add(nnQuery);
@@ -42,11 +42,11 @@ public class ORMTest {
 
             // Add primary key attributes.
             IdType id = new IdType();
-            id.setName("metadataId");
+            id.setName("empId");
             id.setType(String.class.getName());
 
             ColumnType col = new ColumnType();
-            col.setName("metadata_id");
+            col.setName("emp_id");
             col.setLength(32);
 
             id.setColumn(col);
@@ -64,11 +64,11 @@ public class ORMTest {
 
             // Add other columns attributes.
             BasicType basic = new BasicType();
-            basic.setName("repoName");
+            basic.setName("locationName");
             basic.setType(String[].class.getName());
 
             col = new ColumnType();
-            col.setName("repo_name");
+            col.setName("location_name");
             col.setLength(256);
             col.setNullable("false");
             col.setInsertable("true");
@@ -78,11 +78,11 @@ public class ORMTest {
             attrs.getBasic().add(basic);
 
             basic = new BasicType();
-            basic.setName("repoPrice");
+            basic.setName("itemrice");
             basic.setType(String.class.getName());
 
             col = new ColumnType();
-            col.setName("repo_price");
+            col.setName("item_price");
             col.setNullable("false");
             col.setInsertable("true");
             col.setInsertable("true");

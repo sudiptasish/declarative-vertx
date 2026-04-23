@@ -64,7 +64,7 @@
             </deploy-options>
         </verticle>
         <verticle>
-            <name>ecm.processor</name>
+            <name>app.processor</name>
             <class>org.javalabs.core.AppProcessor</class>
             <deploy-options>
                 <worker>true</worker>

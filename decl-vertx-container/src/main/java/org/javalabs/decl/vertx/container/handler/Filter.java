@@ -53,7 +53,7 @@ public class Filter implements Handler<RoutingContext> {
         methods = methods.substring(1, methods.length() - 1);
         
         if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("Invoked ecm common filter");
+            LOGGER.debug("Invoked application common filter");
         }
         String path = ctx.request().path();
         if (path.equals("/")) {

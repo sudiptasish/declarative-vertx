@@ -72,7 +72,7 @@ public class PersistenceCommand implements Command {
             
             propType = new PropertyType();
             propType.setName("javax.persistence.jdbc.url");
-            propType.setValue("jdbc:h2:mem:ecmdb;DB_CLOSE_DELAY=-1");
+            propType.setValue("jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1");
             propsType.getProperty().add(propType);
             
             propType = new PropertyType();

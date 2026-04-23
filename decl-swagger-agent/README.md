@@ -37,7 +37,7 @@ If you are interested in contributing towards this utility, visit our [CONTRIBUT
 
 ## What Purpose does it Solve
 
-`ecm-swagger-agent` utility uses the java attach API to connect to a remote JVM. It then crawl through the code to identify the REST
+`decl-swagger-agent` utility uses the java attach API to connect to a remote JVM. It then crawl through the code to identify the REST
 resources and generate the openapi compliant swagger documentation. The generated file `openapi.yaml` will be created in the same directory
 of the target vm.
 
@@ -56,12 +56,12 @@ java -jar target/spring-rest-0.0.1-SNAPSHOT.jar
 
 2. Connect to target vm by starting the agent.
 
-From `ecm-swagger-agent` directory, execute the below commnd:
+From `decl-swagger-agent` directory, execute the below commnd:
 
 ```
-java -jar target/ecm-swagger-agent-0.0.1-SNAPSHOT.jar\
+java -jar target/decl-swagger-agent-2.0.1.jar\
      -p 41068\
-     -a /Users/schan280/Amex_Projects/github/ecm-platform-provider/ecm-swagger-agent/target/ecm-swagger-agent-0.0.1-SNAPSHOT.jar\
+     -a /Users/schan280/Amex_Projects/github/declarative-vertx/decl-swagger-agent/target/decl-swagger-agent-2.0.1.jar\
      -t spring\
      -k com.example.rest.handler\
      -o /Users/schan280/Projects/openapi.yaml
@@ -114,7 +114,7 @@ load various types of agents, not just for debugging, while "runjdwp" is specifi
 2. Start the Agent
 
 ```
-java -jar target/ecm-swagger-agent-0.0.1-SNAPSHOT.jar -h localhost -r 9792 -jdi
+java -jar target/decl-swagger-agent-2.0.1.jar -h localhost -r 9792 -jdi
 ```
 
 <a name="app"/>

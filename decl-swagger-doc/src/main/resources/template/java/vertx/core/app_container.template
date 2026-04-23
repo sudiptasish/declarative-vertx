@@ -27,8 +27,8 @@ public class AppContainer extends VertxContainer {
     @Override
     protected void preDeploy() {
         try {
-            // Read the ecm configuration file.
-            // Ecm may have environment specific file. At the time of boostrap, the environment name 
+            // Read the application configuration file.
+            // Application may have environment specific file. At the time of boostrap, the environment name 
             // is picked up from the variable EPAAS_ENV.
             String cfgFile = System.getProperty("app.config", DEFAULT_CONFIG);
 

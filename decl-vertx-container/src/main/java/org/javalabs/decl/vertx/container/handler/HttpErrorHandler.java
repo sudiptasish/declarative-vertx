@@ -88,7 +88,7 @@ public class HttpErrorHandler implements Handler<RoutingContext> {
                 else if (statusCode == HttpURLConnection.HTTP_BAD_REQUEST) {
                     // If the authorization header has only "Bearer " string, then jwt auth
                     // handler will throw a Bad Request.
-                    // But, ecm will flag it as UnAuthorized access.
+                    // But, application will flag it as UnAuthorized access.
                     String authorization = ctx.request().headers().get(HttpHeaders.AUTHORIZATION);
                     if (authorization.indexOf(' ') <= 0) {
                         statusCode = HttpURLConnection.HTTP_UNAUTHORIZED;
@@ -97,7 +97,7 @@ public class HttpErrorHandler implements Handler<RoutingContext> {
                 }
                 // Switching to vert.x 4.1.0 has changed the expired token error message
                 // from "Expired JWT token: exp <= now" to "Expired JWT token: exp <= now",
-                // which is causing the ecm sdk to fail.
+                // which is causing the application client to fail.
                 // Although the sdk is upgraded, but to support backward compatbility
                 // the new error message is changed to old message.
                 if (JWT_EXPIRED.get(0).equals(payload)) {

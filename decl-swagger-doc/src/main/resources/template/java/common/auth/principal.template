@@ -3,7 +3,7 @@ package {PACKAGE};
 import java.util.List;
 
 /**
- * Represents the Principal associated with {@link EcmUser}.
+ * Represents the Principal associated with {@link AppUser}.
  * 
  * <p>
  * Principal authentication is the process of proving your identity to the security enforcing components
@@ -54,7 +54,7 @@ public interface Principal {
      * <p>
      * This attribute will be populated post successful authentication of the requested user against
      * a 3rd party auth service (ldap, okta, etc). Currently, a user can be assigned a single role (admin, standard, etc).
-     * This role is internal to ecm.
+     * This role is internal to application.
      * 
      * @return String
      */
