@@ -45,14 +45,14 @@ public class JPAEntityCommand implements Command {
             
             Map<String, Object> params = new HashMap<>();
             params.put("model.gen", "true");
-            params.put("jpa-lite.dialect", "postgres");
+            params.put("jpa-lite.dialect", project.dbDialect());
             params.put("jpa-lite.entity.package", project.modelPkg());
-            params.put("javax.persistence.jdbc.host", "localhost");
-            params.put("javax.persistence.jdbc.port", "5432");
-            params.put("javax.persistence.jdbc.db", "testdb");
-            params.put("javax.persistence.jdbc.schema", "public");
-            params.put("javax.persistence.jdbc.user", "test");
-            params.put("javax.persistence.jdbc.password", "test123");
+            params.put("javax.persistence.jdbc.host", project.dbHost());
+            params.put("javax.persistence.jdbc.port", project.dbPort());
+            params.put("javax.persistence.jdbc.db", project.dbName());
+            params.put("javax.persistence.jdbc.schema", project.dbSchema());
+            params.put("javax.persistence.jdbc.user", project.dbUser());
+            params.put("javax.persistence.jdbc.password", project.dbPassword());
             
             // params.put("sample.table.name", "fk_");
             params.put("exclude.entity.name.prefix", "fk_");

@@ -66,6 +66,7 @@
                         </xs:sequence>
                         <xs:attribute name="name" type="xs:string" use="required" />
                         <xs:attribute name="type" type="xs:string" use="required" />
+                        <xs:attribute name="value" type="xs:string" use="optional" />
                       </xs:complexType>
                     </xs:element>
                   </xs:sequence>

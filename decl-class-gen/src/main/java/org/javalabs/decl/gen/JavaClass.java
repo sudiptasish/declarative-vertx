@@ -32,13 +32,20 @@ import org.javalabs.decl.visitor.Element;
  */
 public class JavaClass implements CodeGenSupport, Element {
     
+    public static enum TYPE {CLASS, INTERFACE, ENUM};
+    
     public static final int CONSTRUCTOR_NO_ARG = 0;
     public static final int CONSTRUCTOR_PARAMETERIZED = 1;
     public static final int CONSTRUCTOR_BOTH = 2;
     
     private JavaClass outer;
+    
     private final String name;
+    private final TYPE cType;
     private String dir;
+    
+    // For anum type
+    private List<String> values;
     
     private JavaComment comment;
     private JavaPackage jPackage;
@@ -64,15 +71,24 @@ public class JavaClass implements CodeGenSupport, Element {
     
     private Boolean frozen = Boolean.FALSE;
     
-    private JavaClass inner;
+    private List<JavaClass> inners = new ArrayList<>();
     private LineDecorator decorator;
     
     public JavaClass(String name) {
-        this(name, new LineDecorator());
+        this(name, TYPE.CLASS, new LineDecorator());
+    }
+    
+    public JavaClass(String name, TYPE cType) {
+        this(name, cType, new LineDecorator());
     }
     
     public JavaClass(String name, LineDecorator decorator) {
+        this(name, TYPE.CLASS, decorator);
+    }
+    
+    public JavaClass(String name, TYPE cType, LineDecorator decorator) {
         this.name = name;
+        this.cType = cType;
         this.decorator = decorator;
     }
     
@@ -160,10 +176,11 @@ public class JavaClass implements CodeGenSupport, Element {
     }
     
     public void inner(JavaClass inner) {
-        this.inner = inner;
-        this.inner.modifier("static");
-        this.inner.setDecorator(new LineDecorator(this.decorator.depth() + 1));
-        this.inner.outer = this;
+        inner.modifier("static");
+        inner.setDecorator(new LineDecorator(this.decorator.depth() + 1));
+        this.inners.add(inner);
+        
+        inner.outer = this;
     }
     
     public void dir(String dir) {
@@ -176,6 +193,21 @@ public class JavaClass implements CodeGenSupport, Element {
     
     public String name() {
         return name;
+    }
+    
+    public TYPE ctype() {
+        return cType;
+    }
+    
+    public void values(String... vals) {
+        if (values == null) {
+            values = new ArrayList<>();
+        }
+        if (vals != null) {
+            for (String val : vals) {
+                values.add(val);
+            }
+        }
     }
     
     public List<JavaAnnotation> annotations() {
@@ -214,7 +246,7 @@ public class JavaClass implements CodeGenSupport, Element {
     public String idDataType() {
         for (JavaVariable jVar : jVars) {
             if (jVar.idField()) {
-                return jVar.type().getSimpleName();
+                return jVar.typeName();
             }
         }
         return "String";       // Default data type for an id.
@@ -260,15 +292,17 @@ public class JavaClass implements CodeGenSupport, Element {
 //            }
 //        }
         for (JavaVariable jVar : jVars) {
-            if (jVar.type().getName().startsWith("[")) {
+            if (jVar.typeName().startsWith("[")) {
                 // It's an array (probably [Ljava.lang.String; , or [B, etc)
                 // ignore it.
                 continue;
             }
-            if (! jVar.type().getPackageName().equals("java.lang") && ! DtypeUtil.isPrimitive(jVar.type())) {
-                JavaImport jImport = new JavaImport(jVar.type());
-                if (! jImports.contains(jImport)) {
-                    jImports.add(jImport);
+            if ( jVar.type() != null) {
+                if (! jVar.type().getPackageName().equals("java.lang") && ! DtypeUtil.isPrimitive(jVar.type())) {
+                    JavaImport jImport = new JavaImport(jVar.type());
+                    if (! jImports.contains(jImport)) {
+                        jImports.add(jImport);
+                    }
                 }
             }
             // Check the annotation inside java variable.
@@ -341,11 +375,18 @@ public class JavaClass implements CodeGenSupport, Element {
                         .append(NEW_LINE);
             }
         }
+        String typeName = "class";
+        if (cType == TYPE.INTERFACE) {
+            typeName = "interface";
+        }
+        else if (cType == TYPE.ENUM) {
+            typeName = "enum";
+        }
         buff.append(decorator.classIndent())
                 .append(accessSpecifier)
                 .append(SPACE)
                 .append(modifier != null ? (modifier + SPACE) : "")
-                .append("class")
+                .append(typeName)
                 .append(SPACE)
                 .append(name)
                 .append(SPACE);
@@ -367,8 +408,30 @@ public class JavaClass implements CodeGenSupport, Element {
             buff.append(SPACE);
         }
         buff.append("{");
-        
         buff.append(NEW_LINE).append(NEW_LINE);
+        
+        // Among the inner classes, enum classes will be written first (before variable declaration)
+        if (! inners.isEmpty()) {
+            for (JavaClass inner : inners) {
+                if (inner.ctype() == TYPE.ENUM) {
+                    buff.append(inner.snippet());
+                    buff.append(NEW_LINE).append(NEW_LINE);
+                }
+            }
+        }
+        
+        if (cType == TYPE.ENUM) {
+            for (int i = 0; i < values.size(); i ++) {
+                buff.append(decorator().variableIndent()).append(values.get(i));
+                if (i < values.size() - 1) {
+                    buff.append(COMMA);
+                }
+                else {
+                    buff.append(SEMICOLON);
+                }
+                buff.append(NEW_LINE);
+            }
+        }
         
         if (! jVars.isEmpty()) {
             for (JavaVariable jVar : jVars) {
@@ -395,9 +458,13 @@ public class JavaClass implements CodeGenSupport, Element {
             buff.append(NEW_LINE).append(NEW_LINE);
         }
         
-        // Check inner class.
-        if (inner != null) {
-            buff.append(inner.snippet());
+        // Check inner class (and ONLY classes).
+        if (inners != null && ! inners.isEmpty()) {
+            for (JavaClass inner : inners) {
+                if (inner.ctype() == TYPE.CLASS) {
+                    buff.append(inner.snippet());
+                }
+            }
         }
         
         // End of class

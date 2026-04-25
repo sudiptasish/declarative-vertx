@@ -98,7 +98,12 @@ public abstract class AbstractDoc {
                     Property prop = new Property();
                     if (field.getType().isEnum()) {
                         Object[] vals = field.getType().getEnumConstants();
-                        prop.set_enum(Arrays.asList(vals));
+                        String[] sVals = new String[vals.length];
+                        for (int i = 0; i < vals.length; i ++) {
+                            sVals[i] = vals[i].toString();
+                        }
+                        prop.set_enum(Arrays.asList(sVals));
+                        prop.setType("string");
                     }
                     else if (Date.class.isAssignableFrom(field.getType())) {
                         prop.setType("string");

@@ -12,7 +12,6 @@ import org.javalabs.decl.gen.JavaClass;
  */
 public class Project {
     
-    private Boolean e2e = Boolean.FALSE; 
     private String name;
     private String dir = System.getProperty("user.dir");
     
@@ -51,10 +50,83 @@ public class Project {
     private String storePass = "secret";
     private Integer validityDays = 360;
     
+    private Boolean e2e = Boolean.FALSE; 
+    private Boolean fromDb = Boolean.FALSE;
+    private String dbHost = "localhost";
+    private String dbPort = "5432";
+    private String dbName = "testdb";
+    private String dbSchema = "public";
+    private String dbUser = "test";
+    private String dbPassword;
+    private String dbDialect = "postgres";
+    
     private String unparsedResource;
     private InputResource inputResource;
     
     private JavaClass model;
+    
+    public String dbHost() {
+        return dbHost;
+    }
+
+    public Project dbHost(String dbHost) {
+        this.dbHost = dbHost;
+        return this;
+    }
+    
+    public String dbPort() {
+        return dbPort;
+    }
+
+    public Project dbPort(String dbPort) {
+        this.dbPort = dbPort;
+        return this;
+    }
+    
+    public String dbName() {
+        return dbName;
+    }
+
+    public Project dbName(String dbName) {
+        this.dbName = dbName;
+        return this;
+    }
+    
+    public String dbSchema() {
+        return dbSchema;
+    }
+
+    public Project dbSchema(String dbSchema) {
+        this.dbSchema = dbSchema;
+        return this;
+    }
+    
+    public String dbUser() {
+        return dbUser;
+    }
+
+    public Project dbUser(String dbUser) {
+        this.dbUser = dbUser;
+        return this;
+    }
+    
+    public String dbPassword() {
+        return dbPassword;
+    }
+
+    public Project dbPassword(String dbPassword) {
+        this.dbPassword = dbPassword;
+        return this;
+    }
+    
+    public String dbDialect() {
+        return dbDialect;
+    }
+
+    public Project dbDialect(String dbDialect) {
+        this.dbDialect = dbDialect;
+        return this;
+    }
     
     public String name() {
         return name;
@@ -71,6 +143,15 @@ public class Project {
 
     public Project e2e(Boolean e2e) {
         this.e2e = e2e;
+        return this;
+    }
+    
+    public Boolean fromDb() {
+        return fromDb;
+    }
+
+    public Project fromDb(Boolean fromDb) {
+        this.fromDb = fromDb;
         return this;
     }
 

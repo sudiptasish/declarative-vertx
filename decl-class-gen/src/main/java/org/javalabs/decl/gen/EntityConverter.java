@@ -4,10 +4,10 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Objects;
+import org.javalabs.decl.util.CharUtil;
 import org.javalabs.orm.jaxb.AttributesType;
 import org.javalabs.orm.jaxb.BasicType;
 import org.javalabs.orm.jaxb.ColumnType;
@@ -133,11 +133,53 @@ public class EntityConverter {
                 }
             }
             Class<?> clazz = Class.forName(basic.getType());
+            if (clazz == Enum.class) {
+                String values = basic.getValue();
+                if (values == null || values.trim().length() == 0) {
+                    throw new IllegalArgumentException("Must provide value attribute for Enum type. Example: value=\"[RECEIVED, PENDING, COMPLETE]\"");
+                }
+                if (values.charAt(0) != '[' || values.charAt(values.length() - 1) != ']') {
+                    throw new IllegalArgumentException("Invalid format. Correct format: [RECEIVED, PENDING, COMPLETE]");
+                }
+                values = values.substring(1, values.length() - 1);
+                if (values.trim().length() == 0) {
+                    throw new IllegalArgumentException("Empty array provided for enum type. Example: value=\"[RECEIVED, PENDING, COMPLETE]\"");
+                }
+                String[] vals = values.split(",");
+                for (int i = 0; i < vals.length; i ++) {
+                    vals[i] = vals[i].trim();
+                }
+                // Create the enum class.
+                JavaClass enumClass = new JavaClass(CharUtil.toCapitalisedCamelCase(basic.getName()), JavaClass.TYPE.ENUM);
+                enumClass.values(vals);
+                enumClass.freeze();
+                jClass.inner(enumClass);
+                
+                jClass.addImport(new JavaImport(Class.forName("jakarta.persistence.EnumType")));
+                jClass.addImport(new JavaImport(Class.forName("jakarta.persistence.Enumerated")));
+            }
+            List<JavaAnnotation> colAnns = new ArrayList<>(1);
+            
             LinkedHashMap<String, Object> props = columnAttributes(basic.getName(), basic.getColumn(), clazz);
-            jClass.addVar(new JavaVariable(jClass)
-                    .type(clazz)
-                    .name(basic.getName())
-                    .annotations(Arrays.asList(new JavaAnnotation(jClass).typeName("jakarta.persistence.Column").props(props))));
+            colAnns.add(new JavaAnnotation(jClass).typeName("jakarta.persistence.Column").props(props));
+            if (clazz == Enum.class) {
+                colAnns.add(new JavaAnnotation(jClass)
+                        .typeName("jakarta.persistence.Enumerated")
+                        .props(new LinkedHashMap<>() {{ put("value", "EnumType.STRING"); }}));
+            }
+            if (clazz == Enum.class) {
+                jClass.addVar(new JavaVariable(jClass)
+                        .typeName(pkgName + "." + entity.getName() + "." + CharUtil.toCapitalisedCamelCase(basic.getName()))
+                        .name(basic.getName())
+                        .annotations(colAnns));
+            }
+            else {
+                jClass.addVar(new JavaVariable(jClass)
+                        .type(clazz)
+                        .name(basic.getName())
+                        .annotations(colAnns));
+            }
+            
         }
         // Auto generate setters and getters
         jClass.autoGenMethod(Boolean.TRUE);

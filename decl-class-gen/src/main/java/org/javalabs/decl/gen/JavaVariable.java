@@ -22,6 +22,7 @@ public class JavaVariable implements CodeGenSupport, Element {
     private String accessSpecifier = "private";
     private List<JavaAnnotation> annotations; 
     private Class<?> type;
+    private String typeName;
     private String name;
     
     // Extra attribute used in a model class to identify whether this field represents the primary key of the class.
@@ -41,6 +42,16 @@ public class JavaVariable implements CodeGenSupport, Element {
 
     public JavaVariable type(Class<?> type) {
         this.type = type;
+        this.typeName = type.getName();
+        return this;
+    }
+    
+    public String typeName() {
+        return typeName;
+    }
+
+    public JavaVariable typeName(String typeName) {
+        this.typeName = typeName;
         return this;
     }
     
@@ -65,7 +76,7 @@ public class JavaVariable implements CodeGenSupport, Element {
     @Override
     public int hashCode() {
         int hash = 3;
-        hash = 17 * hash + Objects.hashCode(this.type);
+        hash = 17 * hash + Objects.hashCode(this.typeName);
         hash = 17 * hash + Objects.hashCode(this.name);
         return hash;
     }
@@ -85,13 +96,13 @@ public class JavaVariable implements CodeGenSupport, Element {
         if (!Objects.equals(this.name, other.name)) {
             return false;
         }
-        return Objects.equals(this.type, other.type);
+        return Objects.equals(this.typeName, other.typeName);
     }
     
     public Boolean idField() {
         if (idField == null) {
             idField = (name.toLowerCase().endsWith("id") || name.toLowerCase().contains("identifier"))
-                    && (type == String.class || type == Integer.class || type == Long.class);
+                    && (typeName.equals("java.lang.String") || typeName.equals("java.lang.Integer") || typeName.equals("int") || typeName.equals("Long") || typeName.equals("java.lang.long") || typeName.equals("java.math.BigInteger"));
         }
         return idField;
     }
@@ -115,7 +126,7 @@ public class JavaVariable implements CodeGenSupport, Element {
         buff.append(jClass.decorator().variableIndent())
                 .append(accessSpecifier)
                 .append(SPACE)
-                .append(type.getSimpleName())
+                .append(typeName.substring(typeName.lastIndexOf(".") + 1))
                 .append(SPACE)
                 .append(name)
                 .append(SEMICOLON);

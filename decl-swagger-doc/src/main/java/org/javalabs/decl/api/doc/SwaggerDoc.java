@@ -30,6 +30,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import org.javalabs.decl.util.ConsoleWriter;
+import org.javalabs.decl.util.MapperUtil;
 import org.javalabs.decl.vertx.config.parser.RoutingConfigParser;
 import org.javalabs.decl.vertx.jaxb.Api;
 import org.javalabs.decl.vertx.jaxb.Mapping;
@@ -270,6 +271,9 @@ public class SwaggerDoc {
     
     private void write(OpenApiModel model, DocOption docOpt) {
         try {
+            String s = MapperUtil.ymlMapper().writeValueAsString(model);
+            ClassWriter.write(new File("/Users/schan280/temp/openapi.yaml"), s, docOpt.getVerbose());
+            
             DumperOptions options = new DumperOptions();
             options.setIndent(2);
             options.setPrettyFlow(true);

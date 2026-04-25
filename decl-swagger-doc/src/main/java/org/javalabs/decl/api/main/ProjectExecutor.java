@@ -17,8 +17,8 @@ public class ProjectExecutor implements ExecutorBase {
     
     private final String name = "project";
     private final String description = "Generate sample vert.x project with api documentation";
-    private final List<String> longOptions = Arrays.asList("--create", "--platform", "--tech-stack", "--build-tool", "--dir", "--name", "--resource", "--verbose", "--e2e", "--jpa");
-    private final List<String> shortOptions = Arrays.asList("-c", "-p", "-t", "-b", "-d", "-n", "-r", "-v", "-a", "-j");
+    private final List<String> longOptions = Arrays.asList("--create", "--platform", "--tech-stack", "--build-tool", "--dir", "--name", "--resource", "--verbose", "--e2e", "--from-db");
+    private final List<String> shortOptions = Arrays.asList("-c", "-p", "-t", "-b", "-d", "-n", "-r", "-v", "-a", "-f");
     
     public ProjectExecutor() {}
 
@@ -46,15 +46,7 @@ public class ProjectExecutor implements ExecutorBase {
     
     private Project prepare(String[] options) {
         Boolean create = Boolean.FALSE;
-        Integer verbose = 2;
-        Boolean e2e = Boolean.FALSE;
-        Platform platform = Platform.JAVA;
-        TechStack stack = TechStack.VERTX;
-        BuildTool tool = BuildTool.MAVEN;
-        
-        String dir = "./";
-        String name = "example-rest";
-        String resource = null;
+        Project project = new Project();
         
         for (int i = 0; i < options.length; i ++) {
             if (options[i].equals("-c") || options[i].equals("--create")) {
@@ -63,7 +55,7 @@ public class ProjectExecutor implements ExecutorBase {
             else if (options[i].equals("-p") || options[i].equals("--platform")) {
                 try {
                     verifyArg(options[i], options[i + 1]);
-                    platform = Enum.valueOf(Platform.class, options[i + 1].toUpperCase());
+                    project.platform(Enum.valueOf(Platform.class, options[i + 1].toUpperCase()));
                 }
                 catch (IllegalArgumentException e) {
                     throw new IllegalArgumentException("Invalid platform " + options[i + 1]
@@ -73,7 +65,7 @@ public class ProjectExecutor implements ExecutorBase {
             else if (options[i].equals("-t") || options[i].equals("--tech-stack")) {
                 try {
                     verifyArg(options[i], options[i + 1]);
-                    stack = Enum.valueOf(TechStack.class, options[i + 1].toUpperCase());
+                    project.stack(Enum.valueOf(TechStack.class, options[i + 1].toUpperCase()));
                 }
                 catch (IllegalArgumentException e) {
                     throw new IllegalArgumentException("Invalid tech-stack " + options[i + 1]
@@ -83,7 +75,7 @@ public class ProjectExecutor implements ExecutorBase {
             else if (options[i].equals("-b") || options[i].equals("--build-tool")) {
                 try {
                     verifyArg(options[i], options[i + 1]);
-                    tool = Enum.valueOf(BuildTool.class, options[i + 1].toUpperCase());
+                    project.buildTool(Enum.valueOf(BuildTool.class, options[i + 1].toUpperCase()));
                 }
                 catch (IllegalArgumentException e) {
                     throw new IllegalArgumentException("Invalid build-tool " + options[i + 1]
@@ -92,11 +84,11 @@ public class ProjectExecutor implements ExecutorBase {
             }
             else if (options[i].equals("-d") || options[i].equals("--dir")) {
                 verifyArg(options[i], options[i + 1]);
-                dir = options[i + 1];
+                project.dir(options[i + 1]);
             }
             else if (options[i].equals("-n") || options[i].equals("--name")) {
                 verifyArg(options[i], options[i + 1]);
-                name = options[i + 1];
+                project.name(options[i + 1]);
             }
             else if (options[i].equals("-r") || options[i].equals("--resource")) {
                 String rTmp = options[i + 1];
@@ -114,35 +106,53 @@ public class ProjectExecutor implements ExecutorBase {
                 else {
                     verifyArg(options[i], rTmp);
                 }
-                resource = rTmp;
+                if (Character.isLowerCase(rTmp.charAt(0))) {
+                    rTmp = Character.toUpperCase(rTmp.charAt(0)) + rTmp.substring(1);
+                }
+                project.unparsedResource(rTmp);
             }
             else if (options[i].equals("-v") || options[i].equals("--verbose")) {
                 verifyArg(options[i], options[i + 1]);
-                verbose = Integer.valueOf(options[i + 1]);
+                project.verbose(Integer.valueOf(options[i + 1]));
             }
             else if (options[i].equals("-a") || options[i].equals("--e2e")) {
-                e2e = Boolean.TRUE;
+                project.e2e(Boolean.TRUE);
+            }
+            else if (options[i].equals("-f") || options[i].equals("--from-db")) {
+                project.fromDb(Boolean.TRUE);
+            }
+            else if (options[i].equals("--db-host") && project.fromDb()) {
+                project.dbHost(options[i + 1]);
+            }
+            else if (options[i].equals("--db-port") && project.fromDb()) {
+                project.dbPort(options[i + 1]);
+            }
+            else if (options[i].equals("--db-name") && project.fromDb()) {
+                project.dbName(options[i + 1]);
+            }
+            else if (options[i].equals("--db-schema") && project.fromDb()) {
+                project.dbSchema(options[i + 1]);
+            }
+            else if (options[i].equals("--db-user") && project.fromDb()) {
+                project.dbUser(options[i + 1]);
+            }
+            else if (options[i].equals("--db-password") && project.fromDb()) {
+                project.dbPassword(options[i + 1]);
+            }
+            else if (options[i].equals("--db-dialect") && project.fromDb()) {
+                project.dbDialect(options[i + 1]);
             }
         }
         if (! create) {
             throw new IllegalArgumentException("Did you miss the -c [--create] flag?");
         }
-        if (!e2e && resource == null) {
+        if (! project.e2e() && project.unparsedResource() == null) {
             throw new IllegalArgumentException("Must provide the resource name [E.g., Employee, Bank, Student, etc]");
         }
-        // Make resource captilaized.
-        if (resource != null && Character.isLowerCase(resource.charAt(0))) {
-            resource = Character.toUpperCase(resource.charAt(0)) + resource.substring(1);
+        if (project.fromDb()) {
+            
         }
-        return new Project()
-                .e2e(e2e)
-                .dir(dir)
-                .name(name)
-                .platform(platform)
-                .stack(stack)
-                .buildTool(tool)
-                .verbose(verbose)
-                .unparsedResource(resource);
+        return project;
     }
     
     private void verifyArg(String param, String val) {

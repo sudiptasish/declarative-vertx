@@ -45,7 +45,10 @@ public class BasicType {
     
     @XmlAttribute(name = "type")
     protected String type;
-
+    
+    @XmlAttribute(name = "value")
+    protected String value;
+    
     /**
      * Gets the value of the column property.
      * 
@@ -116,6 +119,30 @@ public class BasicType {
      */
     public void setType(String value) {
         this.type = value;
+    }
+
+    /**
+     * Gets the value of the value property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link String }
+     *     
+     */
+    public String getValue() {
+        return value;
+    }
+
+    /**
+     * Sets the value of the value property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link String }
+     *     
+     */
+    public void setValue(String value) {
+        this.value = value;
     }
 
 }

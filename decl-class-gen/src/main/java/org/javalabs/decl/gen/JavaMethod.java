@@ -31,6 +31,7 @@ public class JavaMethod implements CodeGenSupport, Element {
     private String name;
     private String[] argNames;
     private Class<?>[] argTypes;
+    private String[] argTypeNames;
     private Throwable[] errors;
     private String body;
 
@@ -67,6 +68,15 @@ public class JavaMethod implements CodeGenSupport, Element {
 
     public JavaMethod argTypes(Class... args) {
         this.argTypes = args;
+        this.argTypeNames = new String[this.argTypes.length];
+        for (int i = 0; i < this.argTypes.length; i ++) {
+            this.argTypeNames[i] = this.argTypes[i].getName();
+        }
+        return this;
+    }
+
+    public JavaMethod argTypeNames(String... args) {
+        this.argTypeNames = args;
         return this;
     }
 
@@ -104,25 +114,25 @@ public class JavaMethod implements CodeGenSupport, Element {
                 .append(SPACE)
                 .append(name);
         
-        if (argTypes == null) {
+        if (argTypeNames == null) {
             buff.append("()");
         }
         else {
             buff.append("(");
-            for (int i = 0; i < argTypes.length; i ++) {
-                Class<?> argType = argTypes[i];
+            for (int i = 0; i < argTypeNames.length; i ++) {
+                String argTypeName = argTypeNames[i];
                 String argName = argNames[i];
                 
                 if (argName == null) {
-                    String tmp = argType.getSimpleName();
+                    String tmp = argTypeName.substring(argTypeName.lastIndexOf(".") + 1);
                     char ch = Character.toLowerCase(tmp.charAt(0));
                     argName = ch + tmp.substring(1);
                 }
-                buff.append(argType.getSimpleName())
+                buff.append(argTypeName.substring(argTypeName.lastIndexOf(".") + 1))
                         .append(SPACE)
                         .append(argName);
                 
-                if (i < argTypes.length - 1) {
+                if (i < argTypeNames.length - 1) {
                     buff.append(COMMA).append(SPACE);
                 }
             }
@@ -155,7 +165,7 @@ public class JavaMethod implements CodeGenSupport, Element {
         jMethod.accessSpecifier(PUBLIC)
                 .returnType(VOID)
                 .name(setter)
-                .argTypes(jVar.type())
+                .argTypeNames(jVar.typeName())
                 .argNames(jVar.name())
                 .body(jClass.decorator().bodyIndent()
                         .concat("this")
@@ -175,7 +185,7 @@ public class JavaMethod implements CodeGenSupport, Element {
         
         JavaMethod jMethod = new JavaMethod(jClass);
         jMethod.accessSpecifier(PUBLIC)
-                .returnType(jVar.type().getSimpleName())
+                .returnType(jVar.typeName().substring(jVar.typeName().lastIndexOf(".") + 1))
                 .name(getter)
                 .body(jClass.decorator().bodyIndent()
                         .concat("return")
