@@ -9,6 +9,7 @@ import java.io.InputStream;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import org.javalabs.decl.util.ConsoleWriter;
 import org.javalabs.decl.visitor.JavaClassVisitor;
 import org.javalabs.orm.jaxb.EntityMappingsType;
 import org.javalabs.orm.jaxb.EntityType;
@@ -38,6 +39,15 @@ public class JaxbJpaConverterBridge {
 
             List<EntityType> entities = mapping.getEntity();
             for (EntityType entity : entities) {
+                // If any entity has composite primary key, it will be ignored.
+                if (entity.getAttributes().getId() != null && entity.getAttributes().getId().size() >= 2) {
+                    ConsoleWriter.timingPrintln(ConsoleWriter.ANSI_RED + "Skipped class generation for " + entity.getName() + " due to presence of composite key. Generate them manually" + ConsoleWriter.ANSI_RESET);
+                    continue;
+                }
+                if (entity.getAttributes().getId() == null || entity.getAttributes().getId().isEmpty()) {
+                    ConsoleWriter.timingPrintln(ConsoleWriter.ANSI_RED + "Skipped class generation for " + entity.getName() + " due to absense of primary key. Generate them manually" + ConsoleWriter.ANSI_RESET);
+                    continue;
+                }
                 JavaClass jClass = converter.toJavaClass(entity, mapping.getPackage());
                 jClass.freeze();
                 

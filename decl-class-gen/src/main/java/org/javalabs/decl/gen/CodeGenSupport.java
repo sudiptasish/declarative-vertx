@@ -18,6 +18,7 @@ public interface CodeGenSupport {
     String SEMICOLON = ";";
     String COLON = ":";
     String COMMA = ",";
+    String STOP = ".";
     String NULL = "null";
     
     /**

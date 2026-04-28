@@ -1,12 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<entity-mappings xmlns="http://java.sun.com/xml/ns/persistence/orm"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://java.sun.com/xml/ns/persistence/orm http://java.sun.com/xml/ns/persistence/orm_1_0.xsd"
-    version="1.0">
+<entity-mappings version="1.0">
     
-    <package>org.datanucleus.samples.jpa.tutorial</package>
+    <package>io.opns.app.model</package>
 
-    <entity class="org.datanucleus.samples.jpa.tutorial.Product" name="Product">
+    <entity class="io.opns.app.model.Product" name="Product">
         <table name="products"/>
         <named-native-queries>
             <named-native-query>
@@ -34,19 +31,19 @@
         </attributes>
     </entity>
 
-    <entity class="org.datanucleus.samples.jpa.tutorial.Book" name="Book">
+    <entity class="io.opns.app.model.Book" name="Book">
         <table name="books"/>
         <attributes>
             <id name="bookId" type="java.lang.String">
-                <column name="metadata_id" length="32"></column>
+                <column name="book_id" length="32"></column>
             </id>
-            <id name="publishDate" type="java.sq.Timestamp">
+            <id name="publishDate" type="java.sql.Timestamp">
                 <column name="publish_date"></column>
             </id>
             <basic name="repoName" type="java.lang.String">
                 <column name="repoName" length="256" nullable="false" insertable="true" updatable="false"/>
             </basic>
-            <basic name="writeDate" type="java.sq.Timestamp">
+            <basic name="writeDate" type="java.sql.Timestamp">
                 <column name="write_date" nullable="false" insertable="true" updatable="true"/>
             </basic>
         </attributes>

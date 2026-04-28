@@ -51,6 +51,8 @@ public class Project {
     private Integer validityDays = 360;
     
     private Boolean e2e = Boolean.FALSE; 
+    private String ormPath = "./orm/orm.xml";
+    
     private Boolean fromDb = Boolean.FALSE;
     private String dbHost = "localhost";
     private String dbPort = "5432";
@@ -414,6 +416,14 @@ public class Project {
 
     public void inputResource(InputResource inputResource) {
         this.inputResource = inputResource;
+    }
+
+    public String ormPath() {
+        return ormPath;
+    }
+
+    public void ormPath(String ormPath) {
+        this.ormPath = ormPath;
     }
     
     public static class InputResource {

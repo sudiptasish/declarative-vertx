@@ -85,12 +85,7 @@ public class OrmEntityModelCommand implements Command {
         String ormXml = (String)ctx.get("orm.xml");
         if (ormXml == null) {
             // Generate routing-config.xml file
-            String template = "template" + File.separator
-                    + project.platform().name().toLowerCase() + File.separator
-                    + "common" + File.separator
-                    + ORM_XML;
-            
-            byte[] buff = FileHandlerUtil.read(template);
+            byte[] buff = FileHandlerUtil.read(project.ormPath());
             ormXml = new String(buff);
             ormXml = ormXml.replace("{MODEL_PACKAGE}", project.modelPkg());
         }

@@ -34,7 +34,7 @@ public class CommonHelperSupport {
                 tmp = tmp.replace("{TABLE}", jClass.table());
                 tmp = tmp.replace("{CAMEL(RESOURCE)}", CharUtil.toCamelCase(jClass.name()));
                 tmp = tmp.replace("{RESOURCE}", jClass.name());
-                tmp = tmp.replace("{ID_DATA_TYPE}", jClass.idDataType());
+                tmp = tmp.replace("{ID_DATA_TYPE}", jClass.idDataType().substring(jClass.idDataType().lastIndexOf(".") + 1));
             }
             return tmp;
         }

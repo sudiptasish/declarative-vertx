@@ -75,7 +75,6 @@ public class EntityConverter {
         List<IdType> ids = attrs.getId();
         
         for (IdType id : ids) {
-            Class<?> clazz = null;
             List<JavaAnnotation> colAnns = new ArrayList<>();
             
             colAnns.add(new JavaAnnotation(jClass).typeName("jakarta.persistence.Id"));
@@ -86,11 +85,16 @@ public class EntityConverter {
                             + " Either type attribute is missing, or generated-value tag is missing.");
                 }
                 // generated-value is present. Therefore, consider it as an integer type.
-                clazz = Class.forName("java.lang.Integer");
+                id.setType("java.lang.Integer");
+                
+                // It is a generated attribute. The java field name and column name is same.
+                ColumnType col = new ColumnType();
+                col.setName(id.getName());
+                id.setColumn(col);
+                
             }
-            else {
-                clazz = Class.forName(id.getType());
-            }
+            Class<?> clazz = Class.forName(id.getType());
+            
             if (id.getGeneratedValue() != null) {
                 Class<?> enumClazz = Class.forName("jakarta.persistence.GenerationType");
                 Object enumVal = null;

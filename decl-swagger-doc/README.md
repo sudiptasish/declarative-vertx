@@ -86,6 +86,8 @@ Usage                              : project [OPTIONS] ...
 Example 1 (use default fields)     : project -c -d /tmp -n vertx-rest -r Employee
 Example 2 (specify field names)    : project -c -d /tmp -n vertx-rest -r Employee(name,location,salary#long). Default data type: #string
 
+Supported data types               [STR, INT, LONG, FLOAT, BOOL, DATE]
+
 The options are:
 
 -c [--create]                            Generate the vert.x project
@@ -96,7 +98,6 @@ The options are:
 -r [--resource] <resource_name>          Resource name. E.g. Employee, Student, Bank, etc
 -v [--verbose]                           Verbose Output. 1 (Granular level logging) | 2 (Summary logging). Default: 2
 
-Supported data types                     [STR, INT, LONG, FLOAT, BOOL, DATE]
 ```
 
 4. Example
@@ -109,6 +110,47 @@ Supported data types                     [STR, INT, LONG, FLOAT, BOOL, DATE]
 
 * Create a Jax-Rs REST project.
 `project -c -t jaxrs -d /Users/schan280/Projects -n jaxrs-rest -r Employee(name, location, salary#long)`
+
+5. View advanced options for `project` created from `orm.xml`
+
+```
+
+Advanced options:
+--e2e                                    Generate the end-to-end code driven by the database table design as specified in the orm.xml file
+--orm-path                               Path to the orm (Object Relational Mapping) xml file. Mandatory if the --e2e option is specified.
+
+```
+
+6. Example
+
+* Create a Vert.x REST project.
+`project -c -t vertx -d /Users/schan280/Projects -n folks-rest --e2e --orm-path /path/to/orm.xml`
+
+Refer to [Appendix](#app) to see a sample `orm.xml` file.
+
+
+7. View advanced options for `project` created from database
+
+```
+Advanced options:
+--e2e                                    Generate the end-to-end code driven by the database table design as specified in the orm.xml file
+--from-db                                Use this option, if you want to connect to a database to extract the table metadata and generate
+                                         the end-to-end code. You have to provide the following options if '--from-db' is specified.
+
+--db-host                                Database host     [default: localhost]
+--db-port                                Database port     [default: 5432, indicating a local PostgreSQL instance]
+--db-name                                Database name     [default: testdb]
+--db-schema                              Database schema   [default: public]
+--db-user                                Database user     [default: test]
+--db-password                            Database password
+--db-dialect                             Dialect name      [default: POSTGRES]
+
+```
+
+8. Example
+
+* Create a Vert.x REST project.
+`project -c -t vertx -d /Users/schan280/Projects -n folks-rest --e2e --from-db --db-host localhost --db-port 5432 --db-name testdb --db-user test --db-password pwd --db-dialect postgres`
 
 <a name="sg"/>
 
@@ -182,3 +224,62 @@ After enabling Simple HTTPServer successfully, it will start serving files throu
 
 Step 5: Type the url: http://localhost:8000 on the browser and you should see the API spec.
 
+### Sample ORM File
+
+```
+<?xml version="1.0" encoding="UTF-8" ?>
+<entity-mappings xmlns="http://java.sun.com/xml/ns/persistence/orm"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://java.sun.com/xml/ns/persistence/orm http://java.sun.com/xml/ns/persistence/orm_1_0.xsd"
+    version="1.0">
+    
+    <package>org.javalabs.model</package>
+
+    <entity class="org.javalabs.model.Product" name="Product">
+        <table name="products"/>
+        <named-native-queries>
+            <named-native-query>
+                <name>Product.selectAll</name>
+                <query>SELECT * FROM products</query>
+            </named-native-query>
+            <named-native-query>
+                <name>Product.selectByProduct</name>
+                <query>SELECT * FROM products WHERE product_name = ?</query>
+            </named-native-query>
+        </named-native-queries>
+        <attributes>
+            <id name="id">
+                <generated-value strategy="AUTO"/>
+            </id>
+            <basic name="productName" type="java.lang.String">
+                <column name="product_name" length="100" nullable="false" insertable="true" updatable="false"/>
+            </basic>
+            <basic name="description" type="java.lang.String">
+                <column name="description" length="255"/>
+            </basic>
+            <basic name="price" type="java.lang.Integer">
+                <column name="price" nullable="false" precision="10" scale="4"/>
+            </basic>
+        </attributes>
+    </entity>
+
+    <entity class="org.javalabs.model.Book" name="Book">
+        <table name="books"/>
+        <attributes>
+            <id name="bookId" type="java.lang.String">
+                <column name="book_id" length="32"></column>
+            </id>
+            <id name="publishDate" type="java.sq.Timestamp">
+                <column name="publish_date"></column>
+            </id>
+            <basic name="repoName" type="java.lang.String">
+                <column name="repoName" length="256" nullable="false" insertable="true" updatable="false"/>
+            </basic>
+            <basic name="writeDate" type="java.sq.Timestamp">
+                <column name="write_date" nullable="false" insertable="true" updatable="true"/>
+            </basic>
+        </attributes>
+    </entity>
+</entity-mappings>
+
+```

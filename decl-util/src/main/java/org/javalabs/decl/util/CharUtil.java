@@ -4,7 +4,7 @@ package org.javalabs.decl.util;
  *
  * @author schan280
  */
-public class CharUtil {
+public final class CharUtil {
     
     public static String toCapitalisedCamelCase(String word) {
         return toCamelCase(word, true);
@@ -46,5 +46,19 @@ public class CharUtil {
             }
         }
         return new String(arr, 0, idx);
+    }
+    
+    public static String singular(String name) {
+        String ret = CharUtil.toCapitalisedCamelCase(name);
+        if (ret.endsWith("ies")) {
+            ret = ret.substring(0, ret.length() - 3) + "y";
+        }
+        else if (ret.endsWith("es")) {
+            ret = ret.substring(0, ret.length() - 2);
+        }
+        else if (ret.endsWith("s") && ! ret.toLowerCase().endsWith("status")) {
+            ret = ret.substring(0, ret.length() - 1);
+        }
+        return ret;
     }
 }

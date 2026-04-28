@@ -3,7 +3,9 @@ package org.javalabs.decl.api.cust;
 import java.sql.Time;
 import java.sql.Timestamp;
 import java.text.MessageFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import org.javalabs.decl.api.project.Project;
 import org.javalabs.decl.gen.CodeGenSupport;
 import org.javalabs.decl.gen.JavaClass;
@@ -58,14 +60,21 @@ public class PutMethodCustomization extends AbstractCustomization {
         
         try {
             // Find the method for the primary key.
-            String idGetter = "";
+            List<String> idGetters = new ArrayList<>();
             for (JavaVariable jVar : model.variables()) {
                 if (jVar.idField()) {
-                    idGetter = "get" + Character.toUpperCase(jVar.name().charAt(0)) + jVar.name().substring(1);
+                    idGetters.add("get" + Character.toUpperCase(jVar.name().charAt(0)) + jVar.name().substring(1));
                     break;
                 }
             }
-            // Employee existing = employeeDAO.find(new Employee.EmployeePK(employee.getEmployeeId()));
+            // Book existing = bookDAO.find(new Book.BookPK(book.getBookId(), book.getPublishDate()));
+            StringBuilder param = new StringBuilder();
+            for (int i = 0; i < idGetters.size(); i ++) {
+                param.append(CharUtil.toCamelCase(model.name())).append(CodeGenSupport.STOP).append(idGetters.get(i)).append("()");
+                if (i < idGetters.size() - 1) {
+                    param.append(CodeGenSupport.COMMA).append(CodeGenSupport.SPACE);
+                }
+            }
             buff.append(model.name())
                     .append(CodeGenSupport.SPACE)
                     .append("existing")
@@ -73,26 +82,23 @@ public class PutMethodCustomization extends AbstractCustomization {
                     .append(CodeGenSupport.EQUALS)
                     .append(CodeGenSupport.SPACE)
                     .append(CharUtil.toCamelCase(model.name())).append("DAO")
-                    .append(".")
+                    .append(CodeGenSupport.STOP)
                     .append("find")
                     .append("(")
                     .append("new")
                     .append(CodeGenSupport.SPACE)
                     .append(model.name())
-                    .append(".")
+                    .append(CodeGenSupport.STOP)
                     .append(model.name()).append("PK")
                     .append("(")
-                    .append(CharUtil.toCamelCase(model.name()))
-                    .append(".")
-                    .append(idGetter)
-                    .append("()")
+                    .append(param.toString())
                     .append(")")
                     .append(")")
                     .append(CodeGenSupport.SEMICOLON)
                     .append(CodeGenSupport.NEW_LINE);
 
             //  if (existing == null) {
-            //      throw new IllegalArgumentException("No employee found for id: " + employee.getEmployeeId());
+            //      throw new IllegalArgumentException("No employee found for identifier: " + employee.getEmployeeId());
             //  }
             String errMsg = new StringBuilder(50)
                     .append("\"")
@@ -113,7 +119,7 @@ public class PutMethodCustomization extends AbstractCustomization {
                     .append(CodeGenSupport.SPACE)
                     .append(CharUtil.toCamelCase(model.name()))
                     .append(".")
-                    .append(idGetter)
+                    .append(idGetters.get(0))
                     .append("()")
                     .toString();
 
