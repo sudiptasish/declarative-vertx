@@ -149,8 +149,8 @@ public class ProjectExecutor implements ExecutorBase {
         if (! project.e2e() && project.unparsedResource() == null) {
             throw new IllegalArgumentException("Must provide the resource name [E.g., Employee, Bank, Student, etc]");
         }
-        if (project.fromDb()) {
-            
+        if (project.fromDb() && project.dbPassword() == null) {
+            throw new IllegalArgumentException("Must provide the database password");
         }
         return project;
     }

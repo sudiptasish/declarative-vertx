@@ -50,15 +50,7 @@ public class OrmEntityModelCommand implements Command {
                     + File.separator
                     + project.modelPkg().replace('.', '/');
 
-            // Generate routing-config.xml file
-            String template = "template" + File.separator
-                    + project.platform().name().toLowerCase() + File.separator
-                    + "common" + File.separator
-                    + ORM_XML;
-            
-            byte[] buff = FileHandlerUtil.read(template);
-            String ormXml = new String(buff);
-            ormXml = ormXml.replace("{MODEL_PACKAGE}", project.modelPkg());
+            String ormXml = readOrmXml(ctx, project);
             
             Map<String, JavaClass> classes = bridge.toJavaClass(ormXml);
             ctx.add("resource.names", classes);
@@ -87,6 +79,22 @@ public class OrmEntityModelCommand implements Command {
                     , me.getValue().getBytes()
                     , StandardOpenOption.CREATE_NEW);
         }
+    }
+    
+    private String readOrmXml(Context ctx, Project project) throws IOException {
+        String ormXml = (String)ctx.get("orm.xml");
+        if (ormXml == null) {
+            // Generate routing-config.xml file
+            String template = "template" + File.separator
+                    + project.platform().name().toLowerCase() + File.separator
+                    + "common" + File.separator
+                    + ORM_XML;
+            
+            byte[] buff = FileHandlerUtil.read(template);
+            ormXml = new String(buff);
+            ormXml = ormXml.replace("{MODEL_PACKAGE}", project.modelPkg());
+        }
+        return ormXml;
     }
 
     @Override

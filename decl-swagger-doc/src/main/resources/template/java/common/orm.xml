@@ -27,8 +27,8 @@
             <basic name="salary" type="java.lang.Double">
                 <column name="salary" nullable="false" precision="10" scale="2" insertable="true" updatable="true"/>
             </basic>
-            <basic name="status" type="java.lang.Enum" value="[ACTIVE, INACTIVE, BLOCKED]">
-                <column name="status" nullable="false" updatable="true"/>
+            <basic name="status" type="java.lang.Enum" value="(ACTIVE, INACTIVE, BLOCKED)">
+                <column name="status" nullable="false" updatable="true" check="status IN ('ACTIVE', 'INACTIVE', 'BLOCKED')"/>
             </basic>
             <basic name="createdDate" type="java.sql.Timestamp">
                 <column name="created_date" nullable="false" insertable="true" updatable="false"/>

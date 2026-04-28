@@ -249,4 +249,141 @@
                  order="26"
                  backtrack="true"/>
     </chain>
+    
+    <chain name="java_project_e2e_db" class="org.javalabs.decl.api.chain.JavaProjectChain">
+        <command name="validator"
+                 class="org.javalabs.decl.api.cmd.ValidatorCommand"
+                 order="1"
+                 backtrack="true"/>
+
+        <command name="cleanup"
+                 class="org.javalabs.decl.api.cmd.CleanupCommand"
+                 order="2"
+                 backtrack="true"/>
+
+        <command name="workspace"
+                 class="org.javalabs.decl.api.cmd.WorkspaceCommand"
+                 order="4"
+                 backtrack="true"/>
+
+        <command name="maven"
+                 class="org.javalabs.decl.api.cmd.MvnSetupCommand"
+                 order="5"
+                 backtrack="true"/>
+
+        <command name="jpa_entity_model"
+                 class="org.javalabs.decl.api.cmd.JPAEntityCommand"
+                 order="6"
+                 backtrack="true"/>
+
+        <command name="orm_model"
+                 class="org.javalabs.decl.api.cmd.OrmEntityModelCommand"
+                 order="6"
+                 backtrack="true"/>
+
+        <command name="table_script"
+                 class="org.javalabs.decl.api.cmd.TableScriptCommand"
+                 order="7"
+                 backtrack="true"/>
+
+        <command name="persistence"
+                 class="org.javalabs.decl.api.cmd.PersistenceCommand"
+                 order="8"
+                 backtrack="true"/>
+
+        <command name="item_list"
+                 class="org.javalabs.decl.api.cmd.ItemListCommand"
+                 order="9"
+                 backtrack="true"/>
+
+        <command name="utility"
+                 class="org.javalabs.decl.api.cmd.UtilityCommand"
+                 order="10"
+                 backtrack="true"/>
+
+        <command name="auth"
+                 class="org.javalabs.decl.api.cmd.AuthCommand"
+                 order="11"
+                 backtrack="true"/>
+
+        <command name="app_config"
+                 class="org.javalabs.decl.api.cmd.ConfigCommand"
+                 order="12"
+                 backtrack="true"/>
+
+        <command name="dao"
+                 class="org.javalabs.decl.api.cmd.DAOCommand"
+                 order="13"
+                 backtrack="true"/>
+
+        <command name="bo"
+                 class="org.javalabs.decl.api.cmd.BOCommand"
+                 order="14"
+                 backtrack="true"/>
+
+        <command name="handler"
+                 class="org.javalabs.decl.api.cmd.HandlerCommand"
+                 order="15"
+                 backtrack="true"/>
+
+        <command name="routing"
+                 class="org.javalabs.decl.api.cmd.RoutingCommand"
+                 order="16"
+                 backtrack="true"/>
+
+        <command name="server_config"
+                 class="org.javalabs.decl.api.cmd.ServerConfigCommand"
+                 order="17"
+                 backtrack="true"/>
+
+        <command name="vertx_config"
+                 class="org.javalabs.decl.api.cmd.VertxWebConfigCommand"
+                 order="18"
+                 backtrack="true"/>
+
+        <!--command name="add_template"
+                 class="org.javalabs.decl.api.cmd.AdditionalTemplateCommand"
+                 order="10"
+                 backtrack="true"/-->
+
+        <command name="routing"
+                 class="org.javalabs.decl.api.cmd.CoreCommand"
+                 order="19"
+                 backtrack="true"/>
+
+        <command name="vtx_main"
+                 class="org.javalabs.decl.api.cmd.VtxExecMainCommand"
+                 order="20"
+                 backtrack="true"/>
+
+        <command name="readme"
+                 class="org.javalabs.decl.api.cmd.ReadMeCommand"
+                 order="21"
+                 backtrack="true"/>
+
+        <command name="mvn_conclude"
+                 class="org.javalabs.decl.api.cmd.MvnConcludeCommand"
+                 order="22"
+                 backtrack="true"/>
+
+        <command name="print_dir"
+                 class="org.javalabs.decl.api.cmd.PrintDirCommand"
+                 order="23"
+                 backtrack="true"/>
+
+        <command name="apidoc"
+                 class="org.javalabs.decl.api.cmd.ApiDocCommand"
+                 order="24"
+                 backtrack="true"/>
+
+        <command name="redoc"
+                 class="org.javalabs.decl.api.cmd.ReDocCommand"
+                 order="25"
+                 backtrack="true"/>
+
+        <command name="key_store"
+                 class="org.javalabs.decl.api.cmd.KeyStoreCommand"
+                 order="26"
+                 backtrack="true"/>
+    </chain>
 </workflow-config>

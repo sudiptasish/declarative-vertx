@@ -48,6 +48,9 @@ public class JavaProjectTemplate implements ProjectTemplate {
     
     private String chain(Project project) {
         if (project.e2e()) {
+            if (project.fromDb()) {
+                return "java_project_e2e_db";
+            }
             return "java_project_e2e";
         }
         return "java_project";

@@ -31,7 +31,7 @@ public class {RESOURCE}BO {
         }
     }
 
-    public {RESOURCE} create(AppUser user, {RESOURCE} {CAMEL(RESOURCE)}) {
+    public {RESOURCE} create(AppUser usr, {RESOURCE} {CAMEL(RESOURCE)}) {
         StopWatch timer = StopWatch.newTimer();
         timer.start();
         
@@ -45,7 +45,7 @@ public class {RESOURCE}BO {
         return {CAMEL(RESOURCE)};
     }
 
-    public {RESOURCE} modify(AppUser user, {RESOURCE} {CAMEL(RESOURCE)}) {
+    public {RESOURCE} modify(AppUser usr, {RESOURCE} {CAMEL(RESOURCE)}) {
         StopWatch timer = StopWatch.newTimer();
         timer.start();
 
@@ -60,7 +60,7 @@ public class {RESOURCE}BO {
         return existing;
     }
 
-    public List<{RESOURCE}> viewAll(AppUser user, QueryParams params) {
+    public List<{RESOURCE}> viewAll(AppUser usr, QueryParams params) {
         StopWatch timer = StopWatch.newTimer();
         timer.start();
 
@@ -74,7 +74,7 @@ public class {RESOURCE}BO {
         return rows;
     }
 
-    public {RESOURCE} view(AppUser user, {ID_DATA_TYPE} id) {
+    public {RESOURCE} view(AppUser usr, {ID_DATA_TYPE} id) {
         StopWatch timer = StopWatch.newTimer();
         timer.start();
 
@@ -89,7 +89,7 @@ public class {RESOURCE}BO {
         return {CAMEL(RESOURCE)};
     }
 
-    public {RESOURCE} remove(AppUser user, {ID_DATA_TYPE} id) {
+    public {RESOURCE} remove(AppUser usr, {ID_DATA_TYPE} id) {
         StopWatch timer = StopWatch.newTimer();
         timer.start();
 

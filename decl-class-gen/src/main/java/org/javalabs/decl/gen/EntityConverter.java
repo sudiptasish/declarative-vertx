@@ -134,20 +134,29 @@ public class EntityConverter {
             }
             Class<?> clazz = Class.forName(basic.getType());
             if (clazz == Enum.class) {
-                String values = basic.getValue();
-                if (values == null || values.trim().length() == 0) {
-                    throw new IllegalArgumentException("Must provide value attribute for Enum type. Example: value=\"[RECEIVED, PENDING, COMPLETE]\"");
+                String expr = basic.getColumn().getCheck();
+                String opts = "";
+                
+                if (expr != null && expr.trim().length() > 0) {
+                    // check="status IN ('ACTIVE', 'INACTIVE', 'BLOCKED')"
+                    opts = expr.substring(expr.indexOf("("));
                 }
-                if (values.charAt(0) != '[' || values.charAt(values.length() - 1) != ']') {
-                    throw new IllegalArgumentException("Invalid format. Correct format: [RECEIVED, PENDING, COMPLETE]");
+                else {
+                    opts = basic.getValue();
                 }
-                values = values.substring(1, values.length() - 1);
-                if (values.trim().length() == 0) {
-                    throw new IllegalArgumentException("Empty array provided for enum type. Example: value=\"[RECEIVED, PENDING, COMPLETE]\"");
+                if (opts == null || opts.trim().length() == 0) {
+                    throw new IllegalArgumentException("Must provide value attribute for Enum type. Example: value=\"(RECEIVED, PENDING, COMPLETE)\"");
                 }
-                String[] vals = values.split(",");
+                if (opts.charAt(0) != '(' || opts.charAt(opts.length() - 1) != ')') {
+                    throw new IllegalArgumentException("Invalid format. Correct format: (RECEIVED, PENDING, COMPLETE)");
+                }
+                opts = opts.substring(1, opts.length() - 1);
+                if (opts.trim().length() == 0) {
+                    throw new IllegalArgumentException("Empty array provided for enum type. Example: value=\"(RECEIVED, PENDING, COMPLETE)\"");
+                }
+                String[] vals = opts.split(",");
                 for (int i = 0; i < vals.length; i ++) {
-                    vals[i] = vals[i].trim();
+                    vals[i] = vals[i].replace("'", "").trim();
                 }
                 // Create the enum class.
                 JavaClass enumClass = new JavaClass(CharUtil.toCapitalisedCamelCase(basic.getName()), JavaClass.TYPE.ENUM);
@@ -157,17 +166,20 @@ public class EntityConverter {
                 
                 jClass.addImport(new JavaImport(Class.forName("jakarta.persistence.EnumType")));
                 jClass.addImport(new JavaImport(Class.forName("jakarta.persistence.Enumerated")));
+                jClass.addImport(new JavaImport(Class.forName("jakarta.persistence.CheckConstraint")));
             }
             List<JavaAnnotation> colAnns = new ArrayList<>(1);
             
             LinkedHashMap<String, Object> props = columnAttributes(basic.getName(), basic.getColumn(), clazz);
-            colAnns.add(new JavaAnnotation(jClass).typeName("jakarta.persistence.Column").props(props));
+            JavaAnnotation colAnn = new JavaAnnotation(jClass).typeName("jakarta.persistence.Column").props(props);
+            
+            colAnns.add(colAnn);
+            
             if (clazz == Enum.class) {
                 colAnns.add(new JavaAnnotation(jClass)
                         .typeName("jakarta.persistence.Enumerated")
                         .props(new LinkedHashMap<>() {{ put("value", "EnumType.STRING"); }}));
-            }
-            if (clazz == Enum.class) {
+                
                 jClass.addVar(new JavaVariable(jClass)
                         .typeName(pkgName + "." + entity.getName() + "." + CharUtil.toCapitalisedCamelCase(basic.getName()))
                         .name(basic.getName())
@@ -203,7 +215,7 @@ public class EntityConverter {
         return jClass;
     }
     
-    private LinkedHashMap columnAttributes(String name, ColumnType col, Class<?> colDataType) {
+    private LinkedHashMap columnAttributes(String name, ColumnType col, Class<?> colDataType) throws ClassNotFoundException {
         LinkedHashMap<String, Object> props = new LinkedHashMap<>();
 
         props.put("name", col != null ? col.getName() : name);
@@ -211,6 +223,12 @@ public class EntityConverter {
         props.put("updatable", col != null ? Boolean.valueOf(col.getUpdatable()) : false);
         
         if (col != null) {
+            if (col.getCheck() != null) {
+                JavaAnnotation cAnn = new JavaAnnotation(null)
+                        .typeName("jakarta.persistence.CheckConstraint")
+                        .props(new LinkedHashMap<>() {{ put("constraint", col.getCheck()); }});
+                props.put("check", cAnn);
+            }
             if (colDataType == String.class) {
                 props.put("length", col.getLength());
             }

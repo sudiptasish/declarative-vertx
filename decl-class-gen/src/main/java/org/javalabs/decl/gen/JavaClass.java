@@ -408,13 +408,19 @@ public class JavaClass implements CodeGenSupport, Element {
             buff.append(SPACE);
         }
         buff.append("{");
-        buff.append(NEW_LINE).append(NEW_LINE);
+        if (cType == TYPE.ENUM) {
+            buff.append(NEW_LINE);
+        }
+        else {
+            buff.append(NEW_LINE).append(NEW_LINE);
+        }
         
         // Among the inner classes, enum classes will be written first (before variable declaration)
         if (! inners.isEmpty()) {
             for (JavaClass inner : inners) {
                 if (inner.ctype() == TYPE.ENUM) {
                     buff.append(inner.snippet());
+                    buff.append(SEMICOLON);
                     buff.append(NEW_LINE).append(NEW_LINE);
                 }
             }
@@ -468,9 +474,12 @@ public class JavaClass implements CodeGenSupport, Element {
         }
         
         // End of class
+        if (outer == null) {
+            buff.append(NEW_LINE);
+        }
         buff.append(decorator.classIndent())
-                .append("}")
-                .append(NEW_LINE);
+                .append("}");
+                //.append(NEW_LINE);
         
         return buff.toString();
     }

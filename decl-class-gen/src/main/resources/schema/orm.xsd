@@ -61,6 +61,7 @@
                               <xs:attribute name="updatable" type="xs:boolean" use="optional" />
                               <xs:attribute name="precision" type="xs:unsignedByte" use="optional" />
                               <xs:attribute name="scale" type="xs:unsignedByte" use="optional" />
+                              <xs:attribute name="check" type="xs:string" use="optional" />
                             </xs:complexType>
                           </xs:element>
                         </xs:sequence>

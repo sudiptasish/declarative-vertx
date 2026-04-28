@@ -140,22 +140,54 @@ public class JavaAnnotation implements CodeGenSupport, Element {
             else if (ann.props.size() >= 1) {
                 int idx = 0;
 
+                String value = "";
                 for (Map.Entry<String, Object> me : ann.props.entrySet()) {
                     String key = me.getKey();
                     Object val = me.getValue();
-                    
+
                     if (val != null) {
                         if (idx > 0) {
                             buff.append(COMMA).append(SPACE);
                         }
-                        
+                        if (val.getClass().isEnum()) {
+                            value = val.getClass().getSimpleName() + "." + ((Enum)val).name();
+                        }
+                        else if (val instanceof JavaAnnotation) {
+                            JavaAnnotation cAnn = (JavaAnnotation)val;
+
+                            int j = 0;
+                            StringBuilder sb = new StringBuilder();
+                            sb.append("@").append(cAnn.type().getSimpleName()).append("(");
+
+                            for (Map.Entry<String, Object> childMe : cAnn.props.entrySet()) {
+                                String cKey = childMe.getKey();
+                                Object cVal = childMe.getValue();
+                                if (j > 0) {
+                                    sb.append(COMMA).append(SPACE);
+                                }
+                                sb.append(cKey)
+                                        .append(SPACE)
+                                        .append(EQUALS)
+                                        .append(SPACE)
+                                        .append(cVal.getClass() == String.class ? "\"" : "")
+                                        .append(cVal)
+                                        .append(cVal.getClass() == String.class ? "\"" : "");
+
+                                j ++;
+                            }
+                            sb.append(")");
+                            value = sb.toString();
+                        }
+                        else {
+                            value = val.toString();
+                        }
                         // For data type TEXT, there is no max limit.
                         buff.append(key)
                                 .append(SPACE)
                                 .append(EQUALS)
                                 .append(SPACE)
                                 .append(val.getClass() == String.class ? "\"" : "")
-                                .append(val.getClass().isEnum() ? (val.getClass().getSimpleName() + "." + ((Enum)val).name()) : val)
+                                .append(value)
                                 .append(val.getClass() == String.class ? "\"" : "");
 
                         idx ++;
@@ -164,6 +196,7 @@ public class JavaAnnotation implements CodeGenSupport, Element {
             }
             buff.append(")");
         }
+        
         return buff.toString();
     }
 

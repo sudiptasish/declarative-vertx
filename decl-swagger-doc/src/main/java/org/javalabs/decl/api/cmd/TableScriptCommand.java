@@ -94,8 +94,6 @@ public class TableScriptCommand implements Command {
             Method method = generator.getDeclaredMethod("generate", PersistenceConfiguration.class);
             method.invoke(null, config);
             
-            // SchemaGenerator.generate(config);
-            
             if (project.verbose() <= 2) {
                 ConsoleWriter.timingPrintln("Generated table script " + destDir + File.separator + "schema.sql" + ConsoleWriter.ANSI_RESET);
             }

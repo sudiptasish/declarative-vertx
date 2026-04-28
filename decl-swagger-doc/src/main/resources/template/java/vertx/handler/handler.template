@@ -6,7 +6,6 @@ import {BO_PACKAGE}.{RESOURCE}BO;
 import {MODEL_PACKAGE}.{RESOURCE};
 import {MODEL_PACKAGE}.ItemList;
 import {UTIL_PACKAGE}.QueryParams;
-import io.vertx.core.Future;
 import io.vertx.core.Vertx;
 import io.vertx.ext.web.RoutingContext;
 import java.net.HttpURLConnection;
