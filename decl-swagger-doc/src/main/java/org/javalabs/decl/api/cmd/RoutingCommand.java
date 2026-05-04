@@ -14,6 +14,7 @@ import java.util.concurrent.Future;
 import org.javalabs.decl.api.project.Project;
 import org.javalabs.decl.api.project.TechStack;
 import org.javalabs.decl.gen.JavaClass;
+import org.javalabs.decl.util.CharUtil;
 import org.javalabs.decl.util.ConsoleWriter;
 import org.javalabs.decl.vertx.jaxb.Api;
 import org.javalabs.decl.vertx.jaxb.Mapping;
@@ -36,6 +37,7 @@ public class RoutingCommand implements Command {
     
     private static final String[][] STD_APIS = {
             {"", "POST", "create"},
+            {"/$batch", "POST", "batchCreate"},
             {"/:id", "PUT", "modify"},
             {"/:id", "GET", "view"},
             {"/:id", "DELETE", "remove"},
@@ -103,7 +105,7 @@ public class RoutingCommand implements Command {
                 
                 rm = new ResourceMapping();
                 rm.setName(name);
-                rm.setPath("/" + name.toLowerCase() + "s");
+                rm.setPath("/" + CharUtil.lowerFirst(name) + "s");
                 rm.setResource(project.handlerPkg() + "." + name + "Handler");
                 rm.setSchema(project.modelPkg() + "." + name);
                 

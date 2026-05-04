@@ -1,0 +1,146 @@
+package {PACKAGE}.integ;
+
+import io.opns.app.auth.AuthToken;
+import io.opns.app.config.ApplicationConfiguration;
+import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+import java.text.MessageFormat;
+import java.time.Duration;
+import java.util.Base64;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
+import org.javalabs.decl.util.MapperUtil;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+
+/**
+ *
+ * @author schan280
+ */
+public abstract class AbstractRestApiTest {
+    
+    private static final String BASE_URL = "http://{0}:{1}/api/v1";
+    private static final String LOGIN_URI = "/mgmt/login";
+    
+    protected static ApplicationConfiguration APP_CONFIG;
+    protected static HttpClient CLIENT;
+    
+    protected static String baseUrl;
+    
+    @BeforeAll
+    public static void setup() throws IOException {
+        if (! System.getProperties().containsKey("integ")) {
+            return;
+        }
+        String cfgFile = System.getProperty("app.config", "app.json");
+
+        APP_CONFIG = ApplicationConfiguration.getInstance();
+        APP_CONFIG.init(cfgFile);
+        
+        CLIENT = HttpClient.newBuilder()
+                .version(HttpClient.Version.HTTP_2)
+                .followRedirects(HttpClient.Redirect.NORMAL)
+                .connectTimeout(Duration.ofSeconds(15))
+                .build();
+        
+        baseUrl = MessageFormat.format(BASE_URL
+                , System.getProperty("host", "localhost")
+                , System.getProperty("port", "8080"));
+    }
+    
+    protected HttpClient client() {
+        return CLIENT;
+    }
+    
+    protected String login() {
+        String user = (String)APP_CONFIG.get("testing", "user");
+        String password =(String)APP_CONFIG.get("testing", "password");
+        
+        return login(user, password);
+    }
+    
+    protected String login(String user, String password) {
+        return login(LOGIN_URI, user, password);
+    }
+    
+    protected String login(String uri, String user, String password) {
+        try {
+            String basicKey = "Basic " + Base64.getEncoder().encodeToString((user + ":" + password).getBytes());
+            Map<String, String> headers = new HashMap<>();
+            headers.put("Authorization", basicKey);
+            
+            Future<String> future = rpc(uri, "POST", null, headers);
+
+            AuthToken token = MapperUtil.decode(future.get().getBytes(), AuthToken.class);
+            return token.getJwt();
+        }
+        catch (InterruptedException | ExecutionException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    protected CompletableFuture<String> rpc(String uri
+            , String method
+            , Object payload
+            , Map<String, String> headers) {
+        
+        try {
+            if (! headers.containsKey("Content-Type")) {
+                headers.put("Content-Type", "application/json");
+            }
+
+            // Prepare the request builder with the appropriate url
+            HttpRequest.Builder builder = HttpRequest.newBuilder().uri(URI.create(baseUrl + uri));
+
+            // Setup the headers.
+            for (Map.Entry<String, String> me : headers.entrySet()) {
+                builder.header(me.getKey(), me.getValue());
+            }
+
+            // prepare the request body (for a POST request).
+            HttpRequest.BodyPublisher body = null;
+            if (method.equalsIgnoreCase("POST") || method.equalsIgnoreCase("PUT")) {
+                if (payload != null) {
+                    byte[] buff = MapperUtil.encode(payload);
+                    body = HttpRequest.BodyPublishers.ofByteArray(buff);
+                }
+                else {
+                    body = HttpRequest.BodyPublishers.noBody();
+                }
+            }
+
+            // Finally, build the http request
+            HttpRequest request = builder.method(method, body).build();
+
+            // Send request to remote service (sync call)
+            HttpResponse<byte[]> response = CLIENT.send(request, HttpResponse.BodyHandlers.ofByteArray());
+
+            // Wait for the response to process it !
+            if (response.statusCode() != HttpURLConnection.HTTP_CREATED && response.statusCode() != HttpURLConnection.HTTP_OK) {
+                throw new RuntimeException(new String(response.body()));
+            }
+            return CompletableFuture.completedFuture(new String(response.body()));
+        }
+        catch (InterruptedException | IOException e) {
+            return CompletableFuture.failedFuture(e);
+        }
+    }
+    
+    @AfterAll
+    public static void windUp() {
+        if (! System.getProperties().containsKey("integ")) {
+            return;
+        }
+        if (CLIENT != null) {
+            CLIENT.close();
+        }
+    }
+}
+

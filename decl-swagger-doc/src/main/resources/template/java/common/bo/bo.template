@@ -40,9 +40,22 @@ public class {RESOURCE}BO {
         timer.stop();
 
         if (LOGGER.isInfoEnabled()) {
-            LOGGER.info("{RESOURCE} {} created successfully. Elapsed time(ms): {}", timer.elapsedTimeMillis());
+            LOGGER.info("{RESOURCE} created successfully. Elapsed time(ms): {}", timer.elapsedTimeMillis());
         }
         return {CAMEL(RESOURCE)};
+    }
+
+    public void create(AppUser usr, List<{RESOURCE}> records) {
+        StopWatch timer = StopWatch.newTimer();
+        timer.start();
+
+        {org.javalabs.decl.api.cust.BatchMethodCustomization.boEntry(${Project}, ${JavaClass})}
+        {CAMEL(RESOURCE)}DAO.insert(records);
+        timer.stop();
+
+        if (LOGGER.isInfoEnabled()) {
+            LOGGER.info("Created {} {RESOURCE} record(s) successfully. Elapsed time(ms): {}", records.size(), timer.elapsedTimeMillis());
+        }
     }
 
     public {RESOURCE} modify(AppUser usr, {RESOURCE} {CAMEL(RESOURCE)}) {

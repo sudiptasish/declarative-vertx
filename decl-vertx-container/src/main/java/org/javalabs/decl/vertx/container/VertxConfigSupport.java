@@ -9,6 +9,7 @@ import io.vertx.core.spi.VertxMetricsFactory;
 import io.vertx.core.spi.VertxTracerFactory;
 import io.vertx.core.tracing.TracingOptions;
 import java.util.Arrays;
+import java.util.concurrent.TimeUnit;
 import org.javalabs.decl.util.ObjectCreator;
 import org.javalabs.decl.vertx.jaxb.ContextParams;
 import org.javalabs.decl.vertx.jaxb.VertxWeb;
@@ -35,13 +36,17 @@ public abstract class VertxConfigSupport {
         options.setEventLoopPoolSize(params.getEventLoopPoolSize())
                 .setWorkerPoolSize(params.getWorkerPoolSize())
                 .setBlockedThreadCheckInterval(params.getBlockedThreadCheckInterval())
+                .setBlockedThreadCheckIntervalUnit(TimeUnit.MILLISECONDS)
                 .setMaxEventLoopExecuteTime(params.getMaxEventLoopExecuteTime())
+                .setMaxEventLoopExecuteTimeUnit(TimeUnit.MILLISECONDS)
                 .setMaxWorkerExecuteTime(params.getMaxWorkerExecuteTime())
+                .setMaxWorkerExecuteTimeUnit(TimeUnit.MILLISECONDS)
                 .setInternalBlockingPoolSize(params.getInternalBlockingPoolSize())
                 .setHAEnabled(params.isHaEnabled())
                 .setQuorumSize(params.getQuorumSize())
                 .setHAGroup(params.getHaGroup())
                 .setWarningExceptionTime(params.getWarningExceptionTime())
+                .setWarningExceptionTimeUnit(TimeUnit.MILLISECONDS)
                 .setPreferNativeTransport(params.isPreferNativeTransport())
                 .setDisableTCCL(params.isDisableTccl())
                 .setUseDaemonThread(params.isUseDaemonThread());

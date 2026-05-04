@@ -1,5 +1,6 @@
 package {PACKAGE};
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import org.javalabs.decl.util.MapperUtil;
 import org.javalabs.decl.vertx.config.model.ServerMessage;
 import {BO_PACKAGE}.{RESOURCE}BO;
@@ -51,6 +52,27 @@ public class {RESOURCE}Handler extends AbstractHandler {
             {CAMEL(RESOURCE)} = {CAMEL(RESOURCE)}BO.create(user(ctx), {CAMEL(RESOURCE)});
             
             return {CAMEL(RESOURCE)};
+        }).onComplete(result -> {
+            if (result.succeeded()) {
+                sendResponse(ctx, HttpURLConnection.HTTP_CREATED, result.result());
+            }
+            else {
+                ctx.fail(result.cause());
+            }
+        });
+    }
+
+    public void batchCreate(RoutingContext ctx) {
+        // If you use a remote store, this method will safely execute the blocking code.
+        vertx().executeBlocking(() -> {
+            List<{RESOURCE}> list = MapperUtil.mapper().readValue(ctx.body().buffer().getBytes(), new TypeReference<List<{RESOURCE}>>() {});
+            {CAMEL(RESOURCE)}BO.create(user(ctx), list);
+            
+            ServerMessage msg = new ServerMessage();
+            msg.setCode(HttpURLConnection.HTTP_CREATED);
+            msg.setMessage("Inserted " + list.size() + " record(s)");
+            
+            return msg;
         }).onComplete(result -> {
             if (result.succeeded()) {
                 sendResponse(ctx, HttpURLConnection.HTTP_CREATED, result.result());

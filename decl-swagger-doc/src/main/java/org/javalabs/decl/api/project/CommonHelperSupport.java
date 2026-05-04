@@ -32,7 +32,7 @@ public class CommonHelperSupport {
             
             if (jClass != null) {
                 tmp = tmp.replace("{TABLE}", jClass.table());
-                tmp = tmp.replace("{CAMEL(RESOURCE)}", CharUtil.toCamelCase(jClass.name()));
+                tmp = tmp.replace("{CAMEL(RESOURCE)}", CharUtil.lowerFirst(jClass.name()));
                 tmp = tmp.replace("{RESOURCE}", jClass.name());
                 tmp = tmp.replace("{ID_DATA_TYPE}", jClass.idDataType().substring(jClass.idDataType().lastIndexOf(".") + 1));
             }

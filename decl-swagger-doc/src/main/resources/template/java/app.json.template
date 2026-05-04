@@ -1,4 +1,9 @@
 {
+    "db.config": {
+        "url": "",
+        "user": "",
+        "password": ""
+    },
     "testing" : {
         "user" : "test",
         "password" : "p@$$word"

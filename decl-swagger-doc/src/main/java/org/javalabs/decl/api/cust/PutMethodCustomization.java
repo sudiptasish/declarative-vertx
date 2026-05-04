@@ -38,7 +38,7 @@ public class PutMethodCustomization extends AbstractCustomization {
                 }
             }
             if (idVar != null) {
-                buff.append(CharUtil.toCamelCase(model.name()))
+                buff.append(CharUtil.lowerFirst(model.name()))
                         .append(".")
                         .append(idSetter)
                         .append("(")
@@ -70,7 +70,7 @@ public class PutMethodCustomization extends AbstractCustomization {
             // Book existing = bookDAO.find(new Book.BookPK(book.getBookId(), book.getPublishDate()));
             StringBuilder param = new StringBuilder();
             for (int i = 0; i < idGetters.size(); i ++) {
-                param.append(CharUtil.toCamelCase(model.name())).append(CodeGenSupport.STOP).append(idGetters.get(i)).append("()");
+                param.append(CharUtil.lowerFirst(model.name())).append(CodeGenSupport.STOP).append(idGetters.get(i)).append("()");
                 if (i < idGetters.size() - 1) {
                     param.append(CodeGenSupport.COMMA).append(CodeGenSupport.SPACE);
                 }
@@ -81,7 +81,7 @@ public class PutMethodCustomization extends AbstractCustomization {
                     .append(CodeGenSupport.SPACE)
                     .append(CodeGenSupport.EQUALS)
                     .append(CodeGenSupport.SPACE)
-                    .append(CharUtil.toCamelCase(model.name())).append("DAO")
+                    .append(CharUtil.lowerFirst(model.name())).append("DAO")
                     .append(CodeGenSupport.STOP)
                     .append("find")
                     .append("(")
@@ -104,7 +104,7 @@ public class PutMethodCustomization extends AbstractCustomization {
                     .append("\"")
                     .append("No")
                     .append(CodeGenSupport.SPACE)
-                    .append(CharUtil.toCamelCase(model.name()))
+                    .append(CharUtil.lowerFirst(model.name()))
                     .append(CodeGenSupport.SPACE)
                     .append("found")
                     .append(CodeGenSupport.SPACE)
@@ -117,7 +117,7 @@ public class PutMethodCustomization extends AbstractCustomization {
                     .append(CodeGenSupport.SPACE)
                     .append("+")
                     .append(CodeGenSupport.SPACE)
-                    .append(CharUtil.toCamelCase(model.name()))
+                    .append(CharUtil.lowerFirst(model.name()))
                     .append(".")
                     .append(idGetters.get(0))
                     .append("()")
@@ -186,7 +186,7 @@ public class PutMethodCustomization extends AbstractCustomization {
                         .append(".")
                         .append(setter)
                         .append("(")
-                        .append(CharUtil.toCamelCase(model.name()))
+                        .append(CharUtil.lowerFirst(model.name()))
                         .append(".")
                         .append(getter)
                         .append("()")

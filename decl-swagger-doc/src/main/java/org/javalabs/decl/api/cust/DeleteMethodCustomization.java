@@ -31,11 +31,11 @@ public class DeleteMethodCustomization extends AbstractCustomization {
                 // Employee employee = employeeBO.view(user(ctx), Integer.valueOf(id));
                 buff.append(model.name())
                         .append(CodeGenSupport.SPACE)
-                        .append(CharUtil.toCamelCase(model.name()))
+                        .append(CharUtil.lowerFirst(model.name()))
                         .append(CodeGenSupport.SPACE)
                         .append(CodeGenSupport.EQUALS)
                         .append(CodeGenSupport.SPACE)
-                        .append(CharUtil.toCamelCase(model.name()))
+                        .append(CharUtil.lowerFirst(model.name()))
                         .append("BO")
                         .append(".")
                         .append("remove")

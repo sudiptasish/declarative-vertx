@@ -12,6 +12,7 @@ import java.lang.reflect.Method;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Future;
+import org.javalabs.decl.api.cust.BatchMethodCustomization;
 import org.javalabs.decl.gen.JavaClass;
 import org.javalabs.decl.util.ConsoleWriter;
 import org.javalabs.decl.util.FileHandlerUtil;
@@ -31,6 +32,7 @@ public class BOCommand implements Command {
     
     private final Customization postCustomizer = new PostMethodCustomization();
     private final Customization putCustomizer = new PutMethodCustomization();
+    private final Customization batchCustomizer = new BatchMethodCustomization();
     private final CommonHelperSupport helper = new CommonHelperSupport();
     private final String name;
     
@@ -109,7 +111,7 @@ public class BOCommand implements Command {
     }
     
     private String applyCustomization(String content, Project project, JavaClass model) throws ReflectiveOperationException {
-        final Customization[] csArr = {postCustomizer, putCustomizer};
+        final Customization[] csArr = {postCustomizer, putCustomizer, batchCustomizer};
         String tmp = content;
         String entryPoint = "boEntry";
         

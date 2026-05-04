@@ -16,11 +16,11 @@ import org.javalabs.decl.util.CharUtil;
  *
  * @author schan280
  */
-public class PostMethodCustomization extends AbstractCustomization {
+public class BatchMethodCustomization extends AbstractCustomization {
 
     private static final String THROW_TEMPLATE = "throw new {0}({1})";
 
-    public PostMethodCustomization() {
+    public BatchMethodCustomization() {
     }
 
     @Override
@@ -105,8 +105,24 @@ public class PostMethodCustomization extends AbstractCustomization {
                 if (createDateVar.type() == Timestamp.class) {
                     dateTimeApi = "new Timestamp(DateUtil.currentUTCDate().getTime())";
                 }
-
+                nextTab = CodeGenSupport.TAB.concat(CodeGenSupport.TAB);
+                buff.append("for")
+                        .append(CodeGenSupport.SPACE)
+                        .append("(")
+                        .append(model.name())
+                        .append(CodeGenSupport.SPACE)
+                        .append(CharUtil.lowerFirst(model.name()))
+                        .append(CodeGenSupport.SPACE)
+                        .append(CodeGenSupport.COLON)
+                        .append(CodeGenSupport.SPACE)
+                        .append("records")
+                        .append(")")
+                        .append(CodeGenSupport.SPACE)
+                        .append("{")
+                        .append(CodeGenSupport.NEW_LINE);
+                
                 buff.append(nextTab)
+                        .append(CodeGenSupport.TAB)
                         .append("if")
                         .append(CodeGenSupport.SPACE)
                         .append("(")
@@ -126,6 +142,7 @@ public class PostMethodCustomization extends AbstractCustomization {
                         .append(CodeGenSupport.TAB)
                         .append(CodeGenSupport.TAB)
                         .append(CodeGenSupport.TAB)
+                        .append(CodeGenSupport.TAB)
                         .append(CharUtil.lowerFirst(model.name()))
                         .append(".")
                         .append(setter)
@@ -136,8 +153,11 @@ public class PostMethodCustomization extends AbstractCustomization {
                         .append(CodeGenSupport.NEW_LINE)
                         .append(CodeGenSupport.TAB)
                         .append(CodeGenSupport.TAB)
+                        .append(CodeGenSupport.TAB)
                         .append("}")
-                        .append(CodeGenSupport.NEW_LINE);
+                        .append(CodeGenSupport.NEW_LINE)
+                        .append(nextTab)
+                        .append("}");
             }
             return new Result(buff.toString());
         } finally {
