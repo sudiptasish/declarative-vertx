@@ -150,25 +150,31 @@ Advanced options:
 8. Example
 
 * Create a Vert.x REST project.
-`project -c -t vertx -d /Users/schan280/Projects -n folks-rest --e2e --from-db --db-host localhost --db-port 5432 --db-name testdb --db-user test --db-password pwd --db-dialect postgres`
+```
+project -c -t vertx -d /Users/schan280/Projects -n folks-rest --e2e --from-db --db-host localhost --db-port 5432 --db-name testdb --db-user test --db-password pwd --db-dialect postgres
+```
 
 Note:
 1. Post code generation modify the persistence.xml file and replace the in memory h2 db entry with your db details.
-`<property name="javax.persistence.jdbc.url" value="jdbc:postgresql://localhost:5432/testdb"/>`
+```
+<property name="javax.persistence.jdbc.url" value="jdbc:postgresql://localhost:5432/testdb"/>
+```
 
 2. Add the db driver dependency in the `pom.xml` file
 
-`
+```
 <dependency>
     <groupId>org.postgresql</groupId>
     <artifactId>postgresql</artifactId>
     <version>42.7.5</version>
     <scope>runtime</scope>
 </dependency>
-`
+```
 
 To run the application, use
-`java -Xdebug -Xnoagent -Xrunjdwp:transport=dt_socket,address=9792,server=y,suspend=n -Ddata.source=org.javalabs.jpa.ds.JpaLiteDataSource -jar target/folks-rest-0.0.1-SNAPSHOT.jar`
+```
+java -Xdebug -Xnoagent -Xrunjdwp:transport=dt_socket,address=9792,server=y,suspend=n -Ddata.source=org.javalabs.jpa.ds.JpaLiteDataSource -jar target/folks-rest-0.0.1-SNAPSHOT.jar
+```
 
 
 <a name="sg"/>
